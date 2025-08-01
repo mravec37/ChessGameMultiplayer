@@ -1,0 +1,107 @@
+﻿using ChessGameMultiplayer.Dto;
+using ChessGameMultiplayer.Game;
+using ChessGameMultiplayer.Game.Moves;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ChessGameMultiplayer.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class GameController : ControllerBase
+    {
+
+        private readonly ChessEngine _chessEngine;
+        private readonly ILogger<HomeController> _logger;
+
+        public GameController(ChessEngine chessEngine, ILogger<HomeController> logger)
+        {
+            _chessEngine = chessEngine;
+            _logger = logger;
+        }
+
+        [HttpGet("NewGame")]
+        public IActionResult NewGame()
+        {
+            _logger.LogInformation("New game started");
+            _chessEngine.NewGame();
+            var pieces = new List<object>
+            {
+                // Black major pieces
+                new { x = 0, y = 0, piece = "R" },
+                new { x = 1, y = 0, piece = "N" },
+                new { x = 2, y = 0, piece = "B" },
+                new { x = 3, y = 0, piece = "Q" },
+                new { x = 4, y = 0, piece = "K" },
+                new { x = 5, y = 0, piece = "B" },
+                new { x = 6, y = 0, piece = "N" },
+                new { x = 7, y = 0, piece = "R" },
+
+                // White major pieces
+                new { x = 0, y = 7, piece = "r" },
+                new { x = 1, y = 7, piece = "n" },
+                new { x = 2, y = 7, piece = "b" },
+                new { x = 3, y = 7, piece = "q" },
+                new { x = 4, y = 7, piece = "k" },
+                new { x = 5, y = 7, piece = "b" },
+                new { x = 6, y = 7, piece = "n" },
+                new { x = 7, y = 7, piece = "r" }
+            };
+
+            // Add pawns using AddRange
+            pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 1, piece = "P" })); // Black pawns
+            pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 6, piece = "p" })); // White pawns*/
+
+            return Ok(pieces);
+        }
+
+        [HttpPost("MovePiece")]
+        public IActionResult MovePiece([FromBody] MoveRequest move)
+        {
+            _logger.LogInformation("Move piece endpoint");
+            LogMoveRequest(move);
+            MoveResult moveResult =  _chessEngine.MoveIfValid(move);
+            LogMoveResult(moveResult);
+            var dtoList = MoveConverter.ConvertToDtoList(moveResult);
+            return Ok(dtoList);
+        }
+
+
+
+        public void LogMoveResult(MoveResult result)
+        {
+            _logger.LogInformation($"Move Valid: {result.IsValid}");
+
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
+            {
+                _logger.LogInformation($"Error: {result.ErrorMessage}");
+            }
+
+            if (result.Affected == null || result.Affected.Count == 0)
+            {
+                _logger.LogInformation("No affected squares.");
+                return;
+            }
+
+            _logger.LogInformation("Affected Squares:");
+            foreach (var effect in result.Affected)
+            {
+                var pieceName = effect.Piece?.GetType().Name ?? "None";
+                var pieceColor = effect.Piece?.Color.ToString() ?? "-";
+                _logger.LogInformation($"  - Type: {effect.Type}, From: ({effect.from?.X},{effect.from?.Y}), To: ({effect.to?.X},{effect.to?.Y}), Piece: {pieceColor} {pieceName}");
+            }
+        }
+        public void LogMoveRequest(MoveRequest move)
+        {
+            if (move == null)
+            {
+                _logger.LogWarning("MoveRequest is null.");
+                return;
+            }
+
+            _logger.LogInformation("♟️ MoveRequest received:");
+            _logger.LogInformation("  Piece: {Piece}", move.Piece);
+            _logger.LogInformation("  From: ({FromX}, {FromY})", move.From?.X, move.From?.Y);
+            _logger.LogInformation("  To:   ({ToX}, {ToY})", move.To?.X, move.To?.Y);
+        }
+    }
+}

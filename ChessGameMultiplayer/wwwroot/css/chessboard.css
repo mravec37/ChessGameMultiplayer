@@ -1,0 +1,49 @@
+﻿.chess-container {
+    width: 600px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #333;
+    margin: 20px auto;
+}
+
+.row {
+    display: flex;
+    flex: 1;
+}
+
+.square {
+    flex: 1;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+}
+
+    .square.light {
+        background-color: #f0d9b5;
+    }
+
+    .square.dark {
+        background-color: #b58863;
+    }
+
+    .square img {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        pointer-events: none;
+    }
+.captured-panel {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px;
+    min-height: 40px;
+}
+
+    .captured-panel img {
+        height: 36px;
+        width: 36px;
+    }

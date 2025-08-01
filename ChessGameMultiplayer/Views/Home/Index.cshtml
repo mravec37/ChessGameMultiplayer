@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Chess Board";
+}
+<link rel="stylesheet" href="~/css/chessboard.css" />
+
+<div class="captured-panel" id="captured-top"></div>
+
+<div class="chess-container" id="chessboard">
+    @for (int row = 0; row < 8; row++)
+    {
+        <div class="row">
+            @for (int col = 0; col < 8; col++)
+            {
+                var isDark = (row + col) % 2 == 1;
+                <div class="square @(isDark ? "dark" : "light")" data-x="@col" data-y="@row"></div>
+            }
+        </div>
+    }
+</div>
+
+<div class="captured-panel" id="captured-bottom"></div>
+
+<script src="~/js/chess.js"></script>
