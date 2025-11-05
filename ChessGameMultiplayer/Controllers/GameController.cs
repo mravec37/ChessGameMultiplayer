@@ -12,6 +12,7 @@ namespace ChessGameMultiplayer.Controllers
 
         private readonly ChessEngine _chessEngine;
         private readonly ILogger<HomeController> _logger;
+        int numOfCalls = 0;
 
         public GameController(ChessEngine chessEngine, ILogger<HomeController> logger)
         {
@@ -19,40 +20,72 @@ namespace ChessGameMultiplayer.Controllers
             _logger = logger;
         }
 
-        [HttpGet("NewGame")]
+         [HttpGet("NewGame")]
+         public IActionResult NewGame()
+         {
+             _logger.LogInformation("New game started");
+             _chessEngine.NewGame();
+             var pieces = new List<object>
+             {
+                 // Black major pieces
+                 new { x = 0, y = 0, piece = "R" },
+                 new { x = 1, y = 0, piece = "N" },
+                 new { x = 2, y = 0, piece = "B" },
+                 new { x = 3, y = 0, piece = "Q" },
+                 new { x = 4, y = 0, piece = "K" },
+                 new { x = 5, y = 0, piece = "B" },
+                 new { x = 6, y = 0, piece = "N" },
+                 new { x = 7, y = 0, piece = "R" },
+
+                 // White major pieces
+                 new { x = 0, y = 7, piece = "r" },
+                 new { x = 1, y = 7, piece = "n" },
+                 new { x = 2, y = 7, piece = "b" },
+                 new { x = 3, y = 7, piece = "q" },
+                 new { x = 4, y = 7, piece = "k" },
+                 new { x = 5, y = 7, piece = "b" },
+                 new { x = 6, y = 7, piece = "n" },
+                 new { x = 7, y = 7, piece = "r" }
+             };
+
+             // Add pawns using AddRange
+             pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 1, piece = "P" })); // Black pawns
+             pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 6, piece = "p" })); // White pawns*/
+
+        return Ok(pieces);
+        }
+
+
+        //is called 2 times for some reason, maybe razor does hot reload
+
+       /* [HttpGet("NewGame")]
         public IActionResult NewGame()
         {
-            _logger.LogInformation("New game started");
+            numOfCalls++;
+            Console.WriteLine("Number of new game call: " + numOfCalls);
+
+            _logger.LogInformation("Custom test game started");
             _chessEngine.NewGame();
+
             var pieces = new List<object>
-            {
-                // Black major pieces
-                new { x = 0, y = 0, piece = "R" },
-                new { x = 1, y = 0, piece = "N" },
-                new { x = 2, y = 0, piece = "B" },
-                new { x = 3, y = 0, piece = "Q" },
-                new { x = 4, y = 0, piece = "K" },
-                new { x = 5, y = 0, piece = "B" },
-                new { x = 6, y = 0, piece = "N" },
-                new { x = 7, y = 0, piece = "R" },
+    {
+        new { x = 2, y = 0, piece = "K" }, // Black King
+        new { x = 7, y = 1, piece = "B" }, // Black Bishop
+        new { x = 6, y = 3, piece = "B" }, // Black Bishop
 
-                // White major pieces
-                new { x = 0, y = 7, piece = "r" },
-                new { x = 1, y = 7, piece = "n" },
-                new { x = 2, y = 7, piece = "b" },
-                new { x = 3, y = 7, piece = "q" },
-                new { x = 4, y = 7, piece = "k" },
-                new { x = 5, y = 7, piece = "b" },
-                new { x = 6, y = 7, piece = "n" },
-                new { x = 7, y = 7, piece = "r" }
-            };
-
-            // Add pawns using AddRange
-            pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 1, piece = "P" })); // Black pawns
-            pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 6, piece = "p" })); // White pawns*/
+        new { x = 2, y = 7, piece = "k" }, // White King
+        new { x = 1, y = 7, piece = "r" }, // White Rook
+        new { x = 3, y = 7, piece = "b" }, // White Bishop
+        new { x = 1, y = 6, piece = "p" }, // White Pawn
+        new { x = 7, y = 4, piece = "p" }  // White Pawn
+    };
 
             return Ok(pieces);
         }
+       */
+
+
+
 
         [HttpPost("MovePiece")]
         public IActionResult MovePiece([FromBody] MoveRequest move)

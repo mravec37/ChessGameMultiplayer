@@ -2,6 +2,8 @@
     const res = await fetch("/Game/NewGame");
     const pieces = await res.json();
 
+    console.log("Load Game");
+
     pieces.forEach(piece => {
         const selector = `.square[data-x='${piece.x}'][data-y='${piece.y}']`;
         const square = document.querySelector(selector);
@@ -15,7 +17,7 @@
             square.innerHTML = ""; 
             square.appendChild(img);
         }
-    });
+    })
 }
 
 // Helper function to get filename based on piece color
@@ -31,7 +33,7 @@ let selectedSquare = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadGame();
-
+    console.log("Event Listener");
     // Attach click handlers to squares
     document.querySelectorAll(".square").forEach(square => {
         square.addEventListener("click", onSquareClick);
@@ -167,4 +169,4 @@ function updateBoard(effects) {
 }
 
 
-document.addEventListener("DOMContentLoaded", loadGame);
+//document.addEventListener("DOMContentLoaded", loadGame);

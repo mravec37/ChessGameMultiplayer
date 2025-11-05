@@ -7,7 +7,6 @@
         Castling,
         Promotion,
         EnPassant,
-        //Check,
-        Clear, // optional: explicitly clearing a square
+        Check
     }
 }

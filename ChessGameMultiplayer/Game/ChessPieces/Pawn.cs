@@ -21,7 +21,6 @@ namespace ChessGameMultiplayer.Game.ChessPieces
               return WhitePawnIsValidMovement(board, from, to);
             }
 
-            return false;
         }
 
         private bool WhitePawnIsValidMovement(ChessBoard board, Position from, Position to)
@@ -64,5 +63,88 @@ namespace ChessGameMultiplayer.Game.ChessPieces
         {
             return Color == ChessPieceColor.White ? 'p' : 'P';
         }
+
+        public override List<Square> GetAttackingSquares(ChessBoard board, Position position)
+        {
+            List<Square> attackedSquares = new List<Square>();
+
+            int coeficientY= 0;
+            if(Color == ChessPieceColor.White) coeficientY = -1;
+            else coeficientY = 1; 
+
+            int dx = position.X + 1;
+            int dy = position.Y + coeficientY;
+
+            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8)
+            {
+                Console.WriteLine("pawn attacked square1 X: " + dx + " Y: " + dy);
+                attackedSquares.Add(board.GetSquare(new Position(dx, dy)));
+            }
+            dx = position.X - 1;
+            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8)
+            {
+                Console.WriteLine("pawn attacked square2 X: " + dx + " Y: " + dy);
+                attackedSquares.Add(board.GetSquare(new Position(dx, dy)));
+            }
+            //return attackedSquares;
+            return new List<Square>();
+        }
+
+
+        public List<Square> GetPossibleMoves(ChessBoard board, Position position)
+        {
+            List<Square> possibleMoves = new List<Square>();
+
+            int coeficientY = 0;
+            if (Color == ChessPieceColor.White) coeficientY = -1;
+            else coeficientY = 1;
+
+            int dx = position.X + 1;
+            int dy = position.Y + coeficientY;
+
+            Console.WriteLine("Pawn position X: " + position.X + " Y: " + position.Y);
+
+            //check if theres a piece on attacking positions to check if the pawn can move here
+            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && board.GetSquare(new Position(dx, dy)).Piece != null)
+            {
+                Console.WriteLine("pawn can move to X: " + dx + " Y: " + dy);
+                possibleMoves.Add(board.GetSquare(new Position(dx, dy)));
+            }
+            dx = position.X - 1;
+            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && board.GetSquare(new Position(dx, dy)).Piece != null)
+            {
+                Console.WriteLine("pawn can move to X: " + dx + " Y: " + dy);
+                possibleMoves.Add(board.GetSquare(new Position(dx, dy)));
+            }
+
+            dx = position.X;
+
+            //check if pawn can move forward
+            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && board.GetSquare(new Position(dx, dy)).Piece == null)
+            {
+                Console.WriteLine("pawn can move to X: " + dx + " Y: " + dy);
+                possibleMoves.Add(board.GetSquare(new Position(dx, dy)));
+            }
+
+            //doublemove check 
+            dy += coeficientY;
+            int doubleMoveY = 0;
+
+            if (coeficientY < 0) {
+                doubleMoveY = 6;
+            }
+            else {
+                doubleMoveY = 1;
+            }
+
+            if (dx >= 0 && dx < 8 && position.Y == doubleMoveY && board.GetSquare(new Position(dx, dy)).Piece == null)
+            {
+                Console.WriteLine("pawn can move to X: " + dx + " Y: " + dy);
+                possibleMoves.Add(board.GetSquare(new Position(dx, dy)));
+            }
+
+            return possibleMoves;
+        }
+
     }
 }

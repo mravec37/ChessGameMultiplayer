@@ -25,5 +25,34 @@ namespace ChessGameMultiplayer.Game.ChessPieces
         }
 
         public override char GetSymbol() => Color == ChessPieceColor.White ? 'n' : 'N';
+
+        public override List<Square> GetAttackingSquares(ChessBoard board, Position position)
+        {
+            List<Square> attackedSquares = new List<Square>();
+            int[][] directions = new int[][]
+          {
+                new int[] {-1,2},
+                new int [] {1,2},
+                new int [] {-1,-2},
+                new int [] {1,-2},
+                new int [] {-2,1},
+                new int [] {2,1},
+                new int [] {-2,-1},
+                new int [] {2,-1}
+          };
+
+            for (int i = 0; i < 8; i++)
+            {
+                int dx = position.X + directions[i][0];
+                int dy = position.Y + directions[i][1];
+
+                if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8)
+                {
+                    attackedSquares.Add(board.GetSquare(new Position(dx, dy)));
+                }
+            }
+
+            return attackedSquares;
+        }
     }
 }
