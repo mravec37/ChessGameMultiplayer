@@ -18,7 +18,7 @@ namespace ChessGameMultiplayer.Game.ChessPieces
 
         public abstract char GetSymbol(); // e.g. 'p' for pawn, 'K' for black king
 
-        public abstract List<Square> GetAttackingSquares(ChessBoard board, Position position);
+        public abstract List<Square> GetAttackedSquares(ChessBoard board, Position position);
     }
 
 }

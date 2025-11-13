@@ -6,6 +6,10 @@ namespace ChessGameMultiplayer.Game.Attack
     public class PieceAttackSliding : PieceAttack
     {
         public List<Square> KingAttackingSequence { get; private set; }
+        public List<Square> AimAtKingSequence { get; private set; }
+
+       
+
         public PieceAttackSliding()
         {
             KingAttackingSequence = new List<Square>();
@@ -30,16 +34,34 @@ namespace ChessGameMultiplayer.Game.Attack
             RemoveFromAllSquares();
 
             Position PiecePosition = Board.GetPiecePosition(Piece);
-            //tu treba ziskat vsetky policka, ktore su napadnute Piece-om a update Square
+           
+            SquareProcessor squareProcessor = new SquareProcessor();
+            squareProcessor.UpdatePieceAttackSequences(Board, PiecePosition);
 
-            //tu nebude piece ale square processor od ktoreho sa zoberu attacked squares
-            List<Square> updatedAttackedSquares = Piece.GetAttackingSquares(Board, PiecePosition);
-            Squares = updatedAttackedSquares;
+            Squares = squareProcessor.AttackedSquares;
+            KingAttackingSequence = squareProcessor.KingAttackSequence;
+            AimAtKingSequence = squareProcessor.PotentialAttackSequence;
+
+            Console.WriteLine("King attack sequence in PieceAttackSliding");
+            foreach (Square square in KingAttackingSequence ?? new List<Square>())
+            {
+                Position pos = Board.squarePositions[square];
+                Console.WriteLine("X: " + pos.X + " Y: " + pos.Y);
+            }
 
             foreach (var square in Squares)
             {
                 square.AddAttackedSquaresSequence(this);
             }
+        }
+        public bool AttacksKing()
+        {
+            return KingAttackingSequence != null && KingAttackingSequence.Count > 0;
+        }
+
+        public bool AimsAtKing()
+        {
+            return AimAtKingSequence != null && AimAtKingSequence.Count > 0;
         }
     }
 }

@@ -44,101 +44,106 @@ public class ChessBoard
     {
         InitializeSquares();
         var createdPieces = new List<ChessPiece>();
-        // Setup pawns
-        for (int x = 0; x < 8; x++)
-        {
-            var whitePos = new Position(x, 6);
-            var blackPos = new Position(x, 1);
 
-            var whitePawn = new Pawn(ChessPieceColor.White);
-            var blackPawn = new Pawn(ChessPieceColor.Black);
+        // --- Black pieces ---
+        var blackKingPos = new Position(7, 0);
+        var blackBishopPos = new Position(1, 0);
+        var blackPawn1Pos = new Position(0, 1);
+        var blackPawn2Pos = new Position(2, 1);
 
-            MovePieceToSquare(whitePos, whitePawn);
-            MovePieceToSquare(blackPos, blackPawn);
+        var blackKing = new King(ChessPieceColor.Black);
+        var blackBishop = new Bishop(ChessPieceColor.Black);
+        var blackPawn1 = new Pawn(ChessPieceColor.Black);
+        var blackPawn2 = new Pawn(ChessPieceColor.Black);
 
-            pieces[whitePawn] = whitePos;
-            pieces[blackPawn] = blackPos;
+        MovePieceToSquare(blackKingPos, blackKing);
+        MovePieceToSquare(blackBishopPos, blackBishop);
+        MovePieceToSquare(blackPawn1Pos, blackPawn1);
+        MovePieceToSquare(blackPawn2Pos, blackPawn2);
 
-            createdPieces.Add(whitePawn);
-            createdPieces.Add(blackPawn);
-        }
+        pieces[blackKing] = blackKingPos;
+        pieces[blackBishop] = blackBishopPos;
+        pieces[blackPawn1] = blackPawn1Pos;
+        pieces[blackPawn2] = blackPawn2Pos;
 
-        // Setup back rows
-        string[] order = { "Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook" };
+        createdPieces.AddRange(new List<ChessPiece> { blackKing, blackBishop, blackPawn1, blackPawn2 });
 
-        for (int x = 0; x < 8; x++)
-        {
-            var whitePos = new Position(x, 7);
-            var blackPos = new Position(x, 0);
+        // --- White pieces ---
+        var whiteKingPos = new Position(1, 5);
+        var whiteQueen1Pos = new Position(3, 2);
+        var whiteQueen2Pos = new Position(6, 2);
+        var whitePawn1Pos = new Position(0, 2);
+        var whitePawn2Pos = new Position(2, 2);
 
-            var whitePiece = CreatePiece(order[x], ChessPieceColor.White);
-            var blackPiece = CreatePiece(order[x], ChessPieceColor.Black);
+        var whiteKing = new King(ChessPieceColor.White);
+        var whiteQueen1 = new Queen(ChessPieceColor.White);
+        var whiteQueen2 = new Queen(ChessPieceColor.White);
+        var whitePawn1 = new Pawn(ChessPieceColor.White);
+        var whitePawn2 = new Pawn(ChessPieceColor.White);
 
-            MovePieceToSquare(whitePos, whitePiece);
-            MovePieceToSquare(blackPos, blackPiece);
+        MovePieceToSquare(whiteKingPos, whiteKing);
+        MovePieceToSquare(whiteQueen1Pos, whiteQueen1);
+        MovePieceToSquare(whiteQueen2Pos, whiteQueen2);
+        MovePieceToSquare(whitePawn1Pos, whitePawn1);
+        MovePieceToSquare(whitePawn2Pos, whitePawn2);
 
-            pieces[whitePiece] = whitePos;
-            pieces[blackPiece] = blackPos;
+        pieces[whiteKing] = whiteKingPos;
+        pieces[whiteQueen1] = whiteQueen1Pos;
+        pieces[whiteQueen2] = whiteQueen2Pos;
+        pieces[whitePawn1] = whitePawn1Pos;
+        pieces[whitePawn2] = whitePawn2Pos;
 
-            createdPieces.Add(whitePiece);
-            createdPieces.Add(blackPiece);
-        }
+        WhiteKingPos = new Position(1, 5);
+        BlackKingPos = new Position(7, 0);
+
+        createdPieces.AddRange(new List<ChessPiece> { whiteKing, whiteQueen1, whiteQueen2, whitePawn1, whitePawn2 });
+
         return createdPieces;
-        /*if (!initialized)
-        {
-            initialized = true;
 
-            InitializeSquares();
-            var createdPieces = new List<ChessPiece>();
+   
 
-            // Black pieces
-            var blackKing = new King(ChessPieceColor.Black);
-            MovePieceToSquare(new Position(2, 0), blackKing);
-            pieces[blackKing] = new Position(2, 0);
-            createdPieces.Add(blackKing);
-            BlackKingPos = new Position(2, 0);
+        /* InitializeSquares();
+         var createdPieces = new List<ChessPiece>();
+         // Setup pawns
+         for (int x = 0; x < 8; x++)
+         {
+             var whitePos = new Position(x, 6);
+             var blackPos = new Position(x, 1);
 
-            var blackBishop1 = new Bishop(ChessPieceColor.Black);
-            MovePieceToSquare(new Position(7, 1), blackBishop1);
-            pieces[blackBishop1] = new Position(7, 1);
-            createdPieces.Add(blackBishop1);
+             var whitePawn = new Pawn(ChessPieceColor.White);
+             var blackPawn = new Pawn(ChessPieceColor.Black);
 
-            var blackBishop2 = new Bishop(ChessPieceColor.Black);
-            MovePieceToSquare(new Position(6, 3), blackBishop2);
-            pieces[blackBishop2] = new Position(6, 3);
-            createdPieces.Add(blackBishop2);
+             MovePieceToSquare(whitePos, whitePawn);
+             MovePieceToSquare(blackPos, blackPawn);
 
-            // White pieces
-            var whiteKing = new King(ChessPieceColor.White);
-            MovePieceToSquare(new Position(2, 7), whiteKing);
-            pieces[whiteKing] = new Position(2, 7);
-            createdPieces.Add(whiteKing);
-            WhiteKingPos = new Position(2, 7);
+             pieces[whitePawn] = whitePos;
+             pieces[blackPawn] = blackPos;
 
-            var whiteRook = new Rook(ChessPieceColor.White);
-            MovePieceToSquare(new Position(1, 7), whiteRook);
-            pieces[whiteRook] = new Position(1, 7);
-            createdPieces.Add(whiteRook);
+             createdPieces.Add(whitePawn);
+             createdPieces.Add(blackPawn);
+         }
 
-            var whiteBishop = new Bishop(ChessPieceColor.White);
-            MovePieceToSquare(new Position(3, 7), whiteBishop);
-            pieces[whiteBishop] = new Position(3, 7);
-            createdPieces.Add(whiteBishop);
+         // Setup back rows
+         string[] order = { "Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook" };
 
-            var whitePawn1 = new Pawn(ChessPieceColor.White);
-            MovePieceToSquare(new Position(1, 6), whitePawn1);
-            pieces[whitePawn1] = new Position(1, 6);
-            createdPieces.Add(whitePawn1);
+         for (int x = 0; x < 8; x++)
+         {
+             var whitePos = new Position(x, 7);
+             var blackPos = new Position(x, 0);
 
-            var whitePawn2 = new Pawn(ChessPieceColor.White);
-            MovePieceToSquare(new Position(7, 4), whitePawn2);
-            pieces[whitePawn2] = new Position(7, 4);
-            createdPieces.Add(whitePawn2);
+             var whitePiece = CreatePiece(order[x], ChessPieceColor.White);
+             var blackPiece = CreatePiece(order[x], ChessPieceColor.Black);
 
-            Console.WriteLine("Number of created pieces: " + createdPieces.Count);
-            return createdPieces;
-        }
-        return null;*/
+             MovePieceToSquare(whitePos, whitePiece);
+             MovePieceToSquare(blackPos, blackPiece);
+
+             pieces[whitePiece] = whitePos;
+             pieces[blackPiece] = blackPos;
+
+             createdPieces.Add(whitePiece);
+             createdPieces.Add(blackPiece);
+         }
+         return createdPieces;*/
     }
 
     private ChessPiece CreatePiece(string type, ChessPieceColor color)

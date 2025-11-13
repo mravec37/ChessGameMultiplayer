@@ -26,7 +26,7 @@ namespace ChessGameMultiplayer.Game.ChessPieces
 
         public override char GetSymbol() => Color == ChessPieceColor.White ? 'n' : 'N';
 
-        public override List<Square> GetAttackingSquares(ChessBoard board, Position position)
+        public override List<Square> GetAttackedSquares(ChessBoard board, Position position)
         {
             List<Square> attackedSquares = new List<Square>();
             int[][] directions = new int[][]

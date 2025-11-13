@@ -64,7 +64,7 @@ namespace ChessGameMultiplayer.Game.ChessPieces
             return Color == ChessPieceColor.White ? 'p' : 'P';
         }
 
-        public override List<Square> GetAttackingSquares(ChessBoard board, Position position)
+        public override List<Square> GetAttackedSquares(ChessBoard board, Position position)
         {
             List<Square> attackedSquares = new List<Square>();
 
