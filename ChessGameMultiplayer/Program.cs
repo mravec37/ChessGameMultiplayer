@@ -1,11 +1,11 @@
-using ChessGameMultiplayer.Game;
+using ChessGameMultiplayer.Game.Logic;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 //Register the chess game services
-builder.Services.AddSingleton<ChessEngine>();
+builder.Services.AddSingleton<GameContainer>();
 //same naming in js as in the backend
 builder.Services.AddControllers().AddJsonOptions(options =>
 {

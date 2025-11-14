@@ -1,15 +1,15 @@
 ﻿using ChessGameMultiplayer.Dto;
 using ChessGameMultiplayer.Game.Moves;
 
-namespace ChessGameMultiplayer.Game
+namespace ChessGameMultiplayer.Game.Logic
 {
-    public class ChessEngine
+    public class GameContainer
     {
-        public Game Game { get; }
+        public ChessEngine Game { get; }
 
-        public ChessEngine()
+        public GameContainer()
         {
-            Game = new Game();
+            Game = new ChessEngine();
         }
 
         public MoveResult MoveIfValid(MoveRequest request)

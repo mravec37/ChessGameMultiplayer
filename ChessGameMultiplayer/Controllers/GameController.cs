@@ -1,5 +1,6 @@
 ﻿using ChessGameMultiplayer.Dto;
 using ChessGameMultiplayer.Game;
+using ChessGameMultiplayer.Game.Logic;
 using ChessGameMultiplayer.Game.Moves;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +11,11 @@ namespace ChessGameMultiplayer.Controllers
     public class GameController : ControllerBase
     {
 
-        private readonly ChessEngine _chessEngine;
+        private readonly GameContainer _chessEngine;
         private readonly ILogger<HomeController> _logger;
         int numOfCalls = 0;
 
-        public GameController(ChessEngine chessEngine, ILogger<HomeController> logger)
+        public GameController(GameContainer chessEngine, ILogger<HomeController> logger)
         {
             _chessEngine = chessEngine;
             _logger = logger;
