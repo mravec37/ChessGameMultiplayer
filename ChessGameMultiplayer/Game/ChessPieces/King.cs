@@ -1,10 +1,12 @@
 ﻿using ChessGameMultiplayer.Game.Board;
+using ChessGameMultiplayer.Game.Logic;
 
 namespace ChessGameMultiplayer.Game.ChessPieces
 {
-    public class King : ChessPiece
+    public class King : ChessPiece, IMoveState
     {
         public King(ChessPieceColor color) : base(color) { }
+        private bool Moved = false;
 
         public override bool IsValidMove(ChessBoard board, Position from, Position to)
         {
@@ -66,6 +68,16 @@ namespace ChessGameMultiplayer.Game.ChessPieces
                 }
             }
             return possibleMoves;
+        }
+
+        public bool HasMoved()
+        {
+            return Moved;
+        }
+
+        public void MarkAsMoved()
+        {
+            Moved = true;
         }
     }
 }

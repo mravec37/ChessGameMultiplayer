@@ -90,7 +90,7 @@ namespace ChessGameMultiplayer.Game.Logic
 
         }
 
-        public static bool MoveNotEndangersOwnKing(MoveRequest request, ChessBoard board, Dictionary<ChessPiece, PieceAttack> attackedSquaresByPiece)
+        public static bool MoveEndangersOwnKing(MoveRequest request, ChessBoard board, Dictionary<ChessPiece, PieceAttack> attackedSquaresByPiece)
         {
             Console.WriteLine("Checking if move endangers own king...");
             ChessPiece movingPiece = board.GetPieceAt(request.From);
@@ -98,7 +98,7 @@ namespace ChessGameMultiplayer.Game.Logic
             if (movingPiece is King && ThreatAnalyzer.IsSquareAttackedByEnemy(request.To, movingPiece.Color, board))
             {
                 Console.WriteLine("Move endangers own king because destination square is attacked by enemy.");
-                return false;
+                return true;
             }
 
             foreach (var (piece, attack) in attackedSquaresByPiece)
@@ -110,7 +110,7 @@ namespace ChessGameMultiplayer.Game.Logic
                     if (pieceAttackSliding.AimsAtKing() && movingPiece.Color != pieceAttackSliding.Piece.Color)
                     {
                         //Check if moving piece from 'from' to 'to' blocks the attack sequence
-                        Console.WriteLine("Piece: " + piece.GetType() + " aims at king.");
+                        Console.WriteLine("Piece: " + piece.GetType() + " aims at king from position X: " + board.GetPiecePosition(piece).X + " Y: " + board.GetPiecePosition(piece).Y);
                         List<Square> attackSequence = pieceAttackSliding.AimAtKingSequence;
                         bool blocksAttack = false;
                         bool onlyDefender = true;
@@ -131,12 +131,12 @@ namespace ChessGameMultiplayer.Game.Logic
                         if (blocksAttack && onlyDefender && !ThreatAnalyzer.InTheLineOfDefense(attackSequence, request.To, board.GetPiecePosition(piece), board))
                         {
                             Console.WriteLine("Move of piece: " + movingPiece.GetType() + " endangers own king.");
-                            return false;
+                            return true;
                         }
                     }
                 }
             }
-            return true;
+            return false;
         }
 
     }

@@ -20,3 +20,24 @@ html {
 body {
   margin-bottom: 60px;
 }
+/* Container for the promotion section */
+#promotion-container {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #EE4B2B;
+   /* border: 1px solid #999*/;
+    background-color: #f0f0f0;
+    text-align: center;
+    max-width: 500px; /* Adjust size as needed */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    #promotion-container h2 {
+        margin-top: 0;
+        font-size: 1.2em;
+    }
+
+    .promotion-white-bg {
+    background-color: white !important;
+}

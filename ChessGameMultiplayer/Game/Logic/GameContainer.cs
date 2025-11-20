@@ -22,5 +22,10 @@ namespace ChessGameMultiplayer.Game.Logic
         {
             Game.NewGame();
         }
+
+        public MoveResult PromotionChoice(PromotionRequest request)
+        {
+            return Game.PromotionChoice(request);
+        }
     }
 }

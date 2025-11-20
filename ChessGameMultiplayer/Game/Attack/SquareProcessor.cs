@@ -27,9 +27,9 @@ namespace ChessGameMultiplayer.Game.Attack
                 }
             }
 
-            if (piece is Bishop)
+            if (piece is Pawn)
             {
-                Console.WriteLine("Square processor attacked squares for bishop:");
+                Console.WriteLine("Square processor attacked squares for Pawn:");
                 foreach (Square square in AttackedSquares)
                 {
                     Position pos = board.squarePositions[square];

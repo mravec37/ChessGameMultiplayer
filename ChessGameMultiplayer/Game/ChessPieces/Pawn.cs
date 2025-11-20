@@ -12,7 +12,11 @@ namespace ChessGameMultiplayer.Game.ChessPieces
             {
                 return false; // Cannot capture own piece
             }
-            if(Color == ChessPieceColor.Black)
+            if(EnPassantMove(board, from, to))
+            {
+                return true;
+            }
+            if (Color == ChessPieceColor.Black)
             {
                return BlackPawnIsValidMovement(board, from, to);
             }
@@ -21,6 +25,39 @@ namespace ChessGameMultiplayer.Game.ChessPieces
               return WhitePawnIsValidMovement(board, from, to);
             }
 
+        }
+
+        private bool EnPassantMove(ChessBoard board, Position from, Position to)
+        {
+            //en passant move
+            Console.WriteLine("En passant positions count: " + board.enPassantPos.Count);
+            if (board.enPassantPos.Count > 0)
+            {
+                foreach (var kvp in board.enPassantPos)
+                {
+                    Pawn enemyPawn = kvp.Key;
+                    Position enemyPawnGhostPos = kvp.Value;
+                    Console.WriteLine("En passant ghost position: " + enemyPawnGhostPos.X + ", " + enemyPawnGhostPos.Y);
+                    if (Color == ChessPieceColor.White)
+                    {
+                        if (from.Y == 3 && to.Y == 2 && Math.Abs(from.X - to.X) == 1 && to.X == enemyPawnGhostPos.X && enemyPawnGhostPos.Y == 2)
+                        {
+                            Console.WriteLine("En passant move");
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (from.Y == 4 && to.Y == 5 && Math.Abs(from.X - to.X) == 1 && to.X == enemyPawnGhostPos.X && enemyPawnGhostPos.Y == 5)
+                        {
+                            Console.WriteLine("Not an en passant move");
+                            return true;
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Not an en passant move");
+            return false;
         }
 
         private bool WhitePawnIsValidMovement(ChessBoard board, Position from, Position to)
@@ -75,6 +112,7 @@ namespace ChessGameMultiplayer.Game.ChessPieces
             int dx = position.X + 1;
             int dy = position.Y + coeficientY;
 
+            Console.WriteLine("XPawn position X: " + position.X + " Y: " + position.Y);
             if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8)
             {
                 Console.WriteLine("pawn attacked square1 X: " + dx + " Y: " + dy);
@@ -86,8 +124,7 @@ namespace ChessGameMultiplayer.Game.ChessPieces
                 Console.WriteLine("pawn attacked square2 X: " + dx + " Y: " + dy);
                 attackedSquares.Add(board.GetSquare(new Position(dx, dy)));
             }
-            //return attackedSquares;
-            return new List<Square>();
+            return attackedSquares;
         }
 
 
@@ -105,13 +142,13 @@ namespace ChessGameMultiplayer.Game.ChessPieces
             Console.WriteLine("Pawn position X: " + position.X + " Y: " + position.Y);
 
             //check if theres a piece on attacking positions to check if the pawn can move here
-            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && board.GetSquare(new Position(dx, dy)).Piece != null)
+            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && (board.GetSquare(new Position(dx, dy)).Piece != null || EnPassantPosition(board, new Position(dx, dy))))
             {
                 Console.WriteLine("pawn can move to X: " + dx + " Y: " + dy);
                 possibleMoves.Add(board.GetSquare(new Position(dx, dy)));
             }
             dx = position.X - 1;
-            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && board.GetSquare(new Position(dx, dy)).Piece != null)
+            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && (board.GetSquare(new Position(dx, dy)).Piece != null || EnPassantPosition(board, new Position(dx, dy))))
             {
                 Console.WriteLine("pawn can move to X: " + dx + " Y: " + dy);
                 possibleMoves.Add(board.GetSquare(new Position(dx, dy)));
@@ -146,5 +183,17 @@ namespace ChessGameMultiplayer.Game.ChessPieces
             return possibleMoves;
         }
 
+        private bool EnPassantPosition(ChessBoard board, Position position)
+        {
+            foreach(var kvp in board.enPassantPos)
+            {
+                Position enPassantPos = kvp.Value;
+                if (position.X == enPassantPos.X && position.Y == enPassantPos.Y)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

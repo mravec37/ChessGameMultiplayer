@@ -34,8 +34,9 @@ namespace ChessGameMultiplayer.Game.Logic
                                 From = piecePos,
                                 To = targetPos
                             };
-                            if (piece.IsValidMove(board, piecePos, targetPos) && MoveValidator.MoveNotEndangersOwnKing(moveRequest, board, attackedSquaresByPiece))
+                            if (piece.IsValidMove(board, piecePos, targetPos) && !MoveValidator.MoveEndangersOwnKing(moveRequest, board, attackedSquaresByPiece))
                             {
+                                Console.WriteLine("Not stalemate, piece can move.");
                                 return;
                             }
                         }
@@ -51,8 +52,9 @@ namespace ChessGameMultiplayer.Game.Logic
                             From = piecePos,
                             To = targetPos
                         };
-                        if (piece.IsValidMove(board, piecePos, targetPos) && MoveValidator.MoveNotEndangersOwnKing(moveRequest, board, attackedSquaresByPiece))
+                        if (piece.IsValidMove(board, piecePos, targetPos) && !MoveValidator.MoveEndangersOwnKing(moveRequest, board, attackedSquaresByPiece))
                         {
+                            Console.WriteLine("Not stalemate, piece can move.");
                             return;
                         }
                     }

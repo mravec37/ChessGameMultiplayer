@@ -1,5 +1,6 @@
 ﻿using ChessGameMultiplayer.Dto;
 using ChessGameMultiplayer.Game.ChessPieces;
+using ChessGameMultiplayer.Game.Logic;
 using ChessGameMultiplayer.Game.Moves;
 using System.Text.RegularExpressions;
 
@@ -11,7 +12,9 @@ public class ChessBoard
 
     public Dictionary<Square, Position> squarePositions;
 
-    private Dictionary<ChessPiece, Position> pieces;
+    public Dictionary<Pawn, Position> enPassantPos;
+
+    public Dictionary<ChessPiece, Position>  PiecesPos { get; set; }
 
     public Position WhiteKingPos { get; private set; }
     public Position BlackKingPos { get; private set; }
@@ -21,7 +24,8 @@ public class ChessBoard
 
     public ChessBoard()
     {
-        pieces = new Dictionary<ChessPiece, Position>();
+        PiecesPos = new Dictionary<ChessPiece, Position>();
+        enPassantPos = new Dictionary<Pawn, Position>();
         squarePositions = new Dictionary<Square, Position>();
         WhiteKingPos = new Position(4, 7);
         BlackKingPos = new Position(4, 0);
@@ -42,7 +46,7 @@ public class ChessBoard
 
     public List<ChessPiece> InitializeStartingPositions()
     {
-        InitializeSquares();
+       /* InitializeSquares();
         var createdPieces = new List<ChessPiece>();
 
         // --- Black pieces ---
@@ -98,11 +102,11 @@ public class ChessBoard
 
         createdPieces.AddRange(new List<ChessPiece> { whiteKing, whiteQueen1, whiteQueen2, whitePawn1, whitePawn2 });
 
-        return createdPieces;
+        return createdPieces;*/
 
    
 
-        /* InitializeSquares();
+         InitializeSquares();
          var createdPieces = new List<ChessPiece>();
          // Setup pawns
          for (int x = 0; x < 8; x++)
@@ -116,8 +120,8 @@ public class ChessBoard
              MovePieceToSquare(whitePos, whitePawn);
              MovePieceToSquare(blackPos, blackPawn);
 
-             pieces[whitePawn] = whitePos;
-             pieces[blackPawn] = blackPos;
+             PiecesPos[whitePawn] = whitePos;
+             PiecesPos[blackPawn] = blackPos;
 
              createdPieces.Add(whitePawn);
              createdPieces.Add(blackPawn);
@@ -137,13 +141,13 @@ public class ChessBoard
              MovePieceToSquare(whitePos, whitePiece);
              MovePieceToSquare(blackPos, blackPiece);
 
-             pieces[whitePiece] = whitePos;
-             pieces[blackPiece] = blackPos;
+             PiecesPos[whitePiece] = whitePos;
+             PiecesPos[blackPiece] = blackPos;
 
              createdPieces.Add(whitePiece);
              createdPieces.Add(blackPiece);
          }
-         return createdPieces;*/
+         return createdPieces;
     }
 
     private ChessPiece CreatePiece(string type, ChessPieceColor color)
@@ -197,6 +201,10 @@ public class ChessBoard
         {
             Console.WriteLine($"Attempted to move from empty square at ({from.X}, {from.Y})");
         }
+        if(piece is IMoveState moveState)
+        {
+            moveState.MarkAsMoved();
+        }
 
         ChessPiece captured = MovePieceToSquare(to, piece);
         RemovePieceFromSquare(from);
@@ -209,13 +217,13 @@ public class ChessBoard
         /* GetSquare(from).UpdateAllAttackedSquaresSequences();
          GetSquare(to).UpdateAllAttackedSquaresSequences();*/
 
-        pieces[piece] = new Position(to.X, to.Y);
+        PiecesPos[piece] = new Position(to.X, to.Y);
         UpdateKingPosition(to);
     }
 
-    public void RemoveCapturedPiece(ChessPiece captured)
+    public void RemovePiece(ChessPiece captured)
     {
-        if (captured != null) pieces.Remove(captured);
+        if (captured != null) PiecesPos.Remove(captured);
     }
 
     public void UpdateAllPieceAttacksOnSquare(Position position)
@@ -240,7 +248,7 @@ public class ChessBoard
 
     internal Position GetPiecePosition(ChessPiece piece)
     {
-        return pieces[piece];
+        return PiecesPos[piece];
     }
 
 }

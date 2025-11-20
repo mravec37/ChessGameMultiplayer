@@ -1,11 +1,13 @@
 ﻿using ChessGameMultiplayer.Game.Attack;
 using ChessGameMultiplayer.Game.Board;
+using ChessGameMultiplayer.Game.Logic;
 
 namespace ChessGameMultiplayer.Game.ChessPieces
 {
-    public class Rook : ChessPieceSlidingAttacker
+    public class Rook : ChessPieceSlidingAttacker, IMoveState
     {
         public Rook(ChessPieceColor color) : base(color) { }
+        private bool Moved {get; set; } = false;
 
         public override bool IsValidMove(ChessBoard board, Position from, Position to)
         {
@@ -174,6 +176,16 @@ namespace ChessGameMultiplayer.Game.ChessPieces
         public void SetSlidingAttack(PieceAttackSliding attack)
         {
             throw new NotImplementedException();
+        }
+
+        public bool HasMoved()
+        {
+            return Moved;
+        }
+
+        public void MarkAsMoved()
+        {
+            Moved = true;
         }
     }
 }

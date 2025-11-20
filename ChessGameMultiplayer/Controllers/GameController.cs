@@ -1,5 +1,6 @@
 ﻿using ChessGameMultiplayer.Dto;
 using ChessGameMultiplayer.Game;
+using ChessGameMultiplayer.Game.ChessPieces;
 using ChessGameMultiplayer.Game.Logic;
 using ChessGameMultiplayer.Game.Moves;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,8 @@ namespace ChessGameMultiplayer.Controllers
         private readonly GameContainer _chessEngine;
         private readonly ILogger<HomeController> _logger;
         int numOfCalls = 0;
+        bool firstTime = true;
+        List<object> storedPieces;
 
         public GameController(GameContainer chessEngine, ILogger<HomeController> logger)
         {
@@ -21,12 +24,14 @@ namespace ChessGameMultiplayer.Controllers
             _logger = logger;
         }
 
-        /*[HttpGet("NewGame")]
+        [HttpGet("NewGame")]
         public IActionResult NewGame()
         {
-            _logger.LogInformation("New game started");
-            _chessEngine.NewGame();
-            var pieces = new List<object>
+            if (firstTime)
+            {
+                _logger.LogInformation("New game started");
+                _chessEngine.NewGame();
+                var pieces = new List<object>
             {
                 // Black major pieces
                 new { x = 0, y = 0, piece = "R" },
@@ -49,14 +54,18 @@ namespace ChessGameMultiplayer.Controllers
                 new { x = 7, y = 7, piece = "r" }
             };
 
-            // Add pawns using AddRange
-            pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 1, piece = "P" })); // Black pawns
-            pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 6, piece = "p" })); // White pawns*/
+                // Add pawns using AddRange
+                pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 1, piece = "P" })); // Black pawns
+                pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 6, piece = "p" })); // White pawns*/
 
-        //return Ok(pieces);
-        //}
+                firstTime = false;
+                storedPieces = pieces;
+                return Ok(pieces);
+            }
+            return Ok(storedPieces);
+        }
 
-        [HttpGet("NewGame")]
+       /* [HttpGet("NewGame")]
         public IActionResult NewGame()
         {
             _logger.LogInformation("New custom game started");
@@ -80,7 +89,7 @@ namespace ChessGameMultiplayer.Controllers
 
             return Ok(pieces);
         }
-
+       */
 
 
 
@@ -125,6 +134,19 @@ namespace ChessGameMultiplayer.Controllers
             var dtoList = MoveConverter.ConvertToDtoList(moveResult);
             return Ok(dtoList);
         }
+
+
+        [HttpPost("PromotionChoice")]
+        public IActionResult PromotionChoice([FromBody] PromotionRequest promotionRequest)
+        {
+            _logger.LogInformation("PromotionChoice endpoint");
+            Console.WriteLine("PromotionChoice endpoint");
+            MoveResult moveResult = _chessEngine.PromotionChoice(promotionRequest);
+            LogMoveResult(moveResult);
+            var dtoList = MoveConverter.ConvertToDtoList(moveResult);
+            return Ok(dtoList);
+        }
+
 
 
 

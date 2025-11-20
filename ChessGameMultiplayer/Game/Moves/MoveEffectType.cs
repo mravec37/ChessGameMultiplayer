@@ -7,6 +7,8 @@
         Castling,
         Promotion,
         EnPassant,
-        Check
+        Check,
+        Remove,
+        Promoted
     }
 }
