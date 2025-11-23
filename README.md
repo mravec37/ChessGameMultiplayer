@@ -32,6 +32,6 @@ The following chess mechanics are already implemented and working:
 * Player vs. AI (chess engine API integration)
 * Improved UI
 
-
+## App Screenshots
 ![App Screenshot](images/chessGame.png)
 ![App Screenshot](images/consoleLogs.png)
