@@ -1,0 +1,32 @@
+# Chess Multiplayer Web App (In Development)
+
+This project is a **web-based chess application**, currently under active development. 
+
+## ✅ Implemented Features
+
+The following chess mechanics are already implemented and working:
+
+### ✔ Checkmate Detection
+
+### ✔ Stalemate Detection
+
+### ✔ Pawn Promotion
+
+### ✔ Castling
+
+### ✔ En Passant
+
+## 🛠 Tech Stack
+
+* **C# / ASP.NET Core** backend
+* **JavaScript** frontend logic
+* **Razor (.cshtml)** views
+* **Custom chess engine implementation** (no external API used)
+
+## 📌 Upcoming Features
+
+* Multiplayer mode
+* Timed matches
+* Match history
+* Player vs. AI (chess engine API integration)
+* Improved UI 
