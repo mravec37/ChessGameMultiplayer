@@ -30,6 +30,8 @@ The following chess mechanics are already implemented and working:
 * Timed matches
 * Match history
 * Player vs. AI (chess engine API integration)
-* Improved UI 
+* Improved UI
+
+
 ![App Screenshot](images/chessGame.png)
 ![App Screenshot](images/consoleLogs.png)
