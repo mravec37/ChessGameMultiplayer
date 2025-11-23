@@ -1,6 +1,7 @@
 # Chess Multiplayer Web App (In Development)
 
 This project is a **web-based chess application**, currently under active development. 
+The project’s chess logic is built on a custom architecture I designed from scratch
 
 ## ✅ Implemented Features
 
@@ -30,3 +31,5 @@ The following chess mechanics are already implemented and working:
 * Match history
 * Player vs. AI (chess engine API integration)
 * Improved UI 
+![App Screenshot](images/chessGame.png)
+![App Screenshot](images/consoleLogs.png)
