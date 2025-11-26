@@ -35,3 +35,8 @@ The following chess mechanics are already implemented and working:
 ## App Screenshots
 ![App Screenshot](images/chessGame.png)
 ![App Screenshot](images/consoleLogs.png)
+Checkmate:
+![App Screenshot](images/checkmate.png)
+Promotion:
+![App Screenshot](images/promotion.png)
+
