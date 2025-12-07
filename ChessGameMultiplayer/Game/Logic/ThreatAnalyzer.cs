@@ -6,7 +6,7 @@ namespace ChessGameMultiplayer.Game.Logic
 {
     public static class ThreatAnalyzer
     {
-        public static int GetNumberOfEnemyAttackedSequencesOnPiece(ChessPiece piece, ChessBoard board)
+        public static int GetNumberOfEnemyAttacksOnPiece(ChessPiece piece, ChessBoard board)
         {
             Position position = board.GetPiecePosition(piece);
             Square square = board.GetSquare(position);

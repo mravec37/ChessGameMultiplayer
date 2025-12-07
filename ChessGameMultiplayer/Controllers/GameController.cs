@@ -24,6 +24,47 @@ namespace ChessGameMultiplayer.Controllers
             _logger = logger;
         }
 
+        /* [HttpGet("NewGame")]
+         public IActionResult NewGame()
+         {
+             if (firstTime)
+             {
+                 _logger.LogInformation("New game started");
+                 _chessEngine.NewGame();
+                 var pieces = new List<object>
+             {
+                 // Black major pieces
+                 new { x = 0, y = 0, piece = "R" },
+                 new { x = 1, y = 0, piece = "N" },
+                 new { x = 2, y = 0, piece = "B" },
+                 new { x = 3, y = 0, piece = "Q" },
+                 new { x = 4, y = 0, piece = "K" },
+                 new { x = 5, y = 0, piece = "B" },
+                 new { x = 6, y = 0, piece = "N" },
+                 new { x = 7, y = 0, piece = "R" },
+
+                 // White major pieces
+                 new { x = 0, y = 7, piece = "r" },
+                 new { x = 1, y = 7, piece = "n" },
+                 new { x = 2, y = 7, piece = "b" },
+                 new { x = 3, y = 7, piece = "q" },
+                 new { x = 4, y = 7, piece = "k" },
+                 new { x = 5, y = 7, piece = "b" },
+                 new { x = 6, y = 7, piece = "n" },
+                 new { x = 7, y = 7, piece = "r" }
+             };
+
+                 // Add pawns using AddRange
+                 pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 1, piece = "P" })); // Black pawns
+                 pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 6, piece = "p" })); // White pawns*/
+
+        // firstTime = false;
+        // storedPieces = pieces;
+        // return Ok(pieces);
+        //}
+        //return Ok(storedPieces);
+        //}*/
+
         [HttpGet("NewGame")]
         public IActionResult NewGame()
         {
@@ -31,65 +72,84 @@ namespace ChessGameMultiplayer.Controllers
             {
                 _logger.LogInformation("New game started");
                 _chessEngine.NewGame();
+
                 var pieces = new List<object>
-            {
-                // Black major pieces
-                new { x = 0, y = 0, piece = "R" },
-                new { x = 1, y = 0, piece = "N" },
-                new { x = 2, y = 0, piece = "B" },
-                new { x = 3, y = 0, piece = "Q" },
-                new { x = 4, y = 0, piece = "K" },
-                new { x = 5, y = 0, piece = "B" },
-                new { x = 6, y = 0, piece = "N" },
-                new { x = 7, y = 0, piece = "R" },
+        {
+            // Rank 8 (y = 0): b . . . . r k .   -->   B . . . . R K .
+            new { x = 0, y = 0, piece = "B" },
+            new { x = 5, y = 0, piece = "R" },
+            new { x = 6, y = 0, piece = "K" },
 
-                // White major pieces
-                new { x = 0, y = 7, piece = "r" },
-                new { x = 1, y = 7, piece = "n" },
-                new { x = 2, y = 7, piece = "b" },
-                new { x = 3, y = 7, piece = "q" },
-                new { x = 4, y = 7, piece = "k" },
-                new { x = 5, y = 7, piece = "b" },
-                new { x = 6, y = 7, piece = "n" },
-                new { x = 7, y = 7, piece = "r" }
-            };
+            // Rank 7 (y = 1): . . . . b p p p   -->   . . . . B P P P
+            new { x = 4, y = 1, piece = "B" },
+            new { x = 5, y = 1, piece = "P" },
+            new { x = 6, y = 1, piece = "P" },
+            new { x = 7, y = 1, piece = "P" },
 
-                // Add pawns using AddRange
-                pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 1, piece = "P" })); // Black pawns
-                pieces.AddRange(Enumerable.Range(0, 8).Select(i => new { x = i, y = 6, piece = "p" })); // White pawns*/
+            // Rank 6 (y = 2): p . . . q n . .   -->   P . . . Q N . .
+            new { x = 0, y = 2, piece = "P" },
+            new { x = 4, y = 2, piece = "Q" },
+            new { x = 5, y = 2, piece = "N" },
+
+            // Rank 5 (y = 3): empty
+
+            // Rank 4 (y = 4): . . N . . . . .   -->   . . n . . . . .
+            new { x = 2, y = 4, piece = "n" },
+
+            // Rank 3 (y = 5): . . P r B . Q .   -->   . . p R b . q .
+            new { x = 2, y = 5, piece = "p" },
+            new { x = 3, y = 5, piece = "R" },
+            new { x = 4, y = 5, piece = "b" },
+            new { x = 6, y = 5, piece = "q" },
+
+            // Rank 2 (y = 6): P P . . . P . P   -->   p p . . . p . p
+            new { x = 0, y = 6, piece = "p" },
+            new { x = 1, y = 6, piece = "p" },
+            new { x = 4, y = 6, piece = "p" },
+            new { x = 5, y = 6, piece = "p" },
+            new { x = 7, y = 6, piece = "p" },
+
+            // Rank 1 (y = 7): . . K . R . R .   -->   . . k . r . r .
+            new { x = 2, y = 7, piece = "k" },
+            new { x = 4, y = 7, piece = "r" },
+            new { x = 6, y = 7, piece = "r" }
+        };
 
                 firstTime = false;
                 storedPieces = pieces;
+
                 return Ok(pieces);
             }
+
             return Ok(storedPieces);
         }
 
-       /* [HttpGet("NewGame")]
-        public IActionResult NewGame()
-        {
-            _logger.LogInformation("New custom game started");
-            _chessEngine.NewGame();
 
-            var pieces = new List<object>
-    {
-        // --- Black pieces ---
-        new { x = 7, y = 0, piece = "K" }, // Black King
-        new { x = 1, y = 0, piece = "B" }, // Black Bishop
-        new { x = 0, y = 1, piece = "P" }, // Black Pawn
-        new { x = 2, y = 1, piece = "P" }, // Black Pawn
+        /* [HttpGet("NewGame")]
+         public IActionResult NewGame()
+         {
+             _logger.LogInformation("New custom game started");
+             _chessEngine.NewGame();
 
-        // --- White pieces ---
-        new { x = 1, y = 5, piece = "k" }, // White King
-        new { x = 3, y = 2, piece = "q" }, // White Queen
-        new { x = 6, y = 2, piece = "q" }, // White Queen
-        new { x = 0, y = 2, piece = "p" }, // White Pawn
-        new { x = 2, y = 2, piece = "p" }  // White Pawn
-    };
+             var pieces = new List<object>
+     {
+         // --- Black pieces ---
+         new { x = 7, y = 0, piece = "K" }, // Black King
+         new { x = 1, y = 0, piece = "B" }, // Black Bishop
+         new { x = 0, y = 1, piece = "P" }, // Black Pawn
+         new { x = 2, y = 1, piece = "P" }, // Black Pawn
 
-            return Ok(pieces);
-        }
-       */
+         // --- White pieces ---
+         new { x = 1, y = 5, piece = "k" }, // White King
+         new { x = 3, y = 2, piece = "q" }, // White Queen
+         new { x = 6, y = 2, piece = "q" }, // White Queen
+         new { x = 0, y = 2, piece = "p" }, // White Pawn
+         new { x = 2, y = 2, piece = "p" }  // White Pawn
+     };
+
+             return Ok(pieces);
+         }
+        */
 
 
 

@@ -6,8 +6,8 @@ namespace ChessGameMultiplayer.Game.ChessPieces
 {
     public class Rook : ChessPieceSlidingAttacker, IMoveState
     {
+        private bool Moved { get; set; } = false;
         public Rook(ChessPieceColor color) : base(color) { }
-        private bool Moved {get; set; } = false;
 
         public override bool IsValidMove(ChessBoard board, Position from, Position to)
         {

@@ -11,7 +11,7 @@ namespace ChessGameMultiplayer.Game.Logic
         {
             //enemy king shold not be in check
             King enemyKing = friendlyColor == ChessPieceColor.White ? (King)board.GetPieceAt(board.BlackKingPos) : (King)board.GetPieceAt(board.WhiteKingPos);
-            if (ThreatAnalyzer.GetNumberOfEnemyAttackedSequencesOnPiece(enemyKing, board) > 0)
+            if (ThreatAnalyzer.GetNumberOfEnemyAttacksOnPiece(enemyKing, board) > 0)
             {
                 Console.WriteLine("Not stalemate, king is in check.");
                 return;
@@ -125,7 +125,7 @@ namespace ChessGameMultiplayer.Game.Logic
             //kingCanMove && GetNumberOfEnemyAttackedSequencesOnSquare(Board.getSquareAt(kingPoisition) > 1 -> checkmate lebo 1 move nemoze blocknut 2+ attackov
             // if(!kingCanMove)
             //{
-            if (ThreatAnalyzer.GetNumberOfEnemyAttackedSequencesOnPiece(king, board) <= 1 && ThreatAnalyzer.IsAttackOnKingBlockable(king, board, attackedSquaresByPiece))
+            if (ThreatAnalyzer.GetNumberOfEnemyAttacksOnPiece(king, board) <= 1 && ThreatAnalyzer.IsAttackOnKingBlockable(king, board, attackedSquaresByPiece))
             {
                 Console.WriteLine("ATTACK BLOCKABLE");
                 attackBlockable = true;
@@ -138,11 +138,6 @@ namespace ChessGameMultiplayer.Game.Logic
             if (!kingCanMove && !attackBlockable) { Console.WriteLine("CHECKMATE"); }
             else { Console.WriteLine("NOT CHECKMATE"); }
             //  }
-
-            //tu potom treba najst ci existuje friendly piece, ktory sa moze postavit na square 
-            //ktory je v attacked square sequence piecu ktory ho attackuje a pritom je blizsie k
-            //attacking piecu ako friendly kral, chebysevova vzdialenost, ak je, neni checkmate
-            //takisto treba skontrolovat ci sa attacking piece neda vyhodit, ak hej, neni checkmate
         }
 
     }

@@ -93,7 +93,7 @@ async function sendMove(fromX, fromY, toX, toY) {
         // Check for promotion effect FIRST
         if (moveEffects.some(e => e.Type === "Promotion")) {
             const effect = moveEffects.find(e => e.Type === "Promotion");
-            await promotion(effect);   // ⬅ AUTO QUEEN PROMOTION
+            await promotion(effect);   
             return;
         }
 
@@ -155,7 +155,7 @@ async function selectPromotion(type, x, y) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            promotionType: type,           // ENUM EXACT NAME
+            promotionType: type,          
             pawnPosition: { x: x, y: y }
         })
     });
@@ -244,7 +244,7 @@ function updateBoard(effects) {
             }
         }
 
-        else { // Promotion result or general piece placement
+        else { 
             if (!toSquare) return;
 
             toSquare.innerHTML = "";

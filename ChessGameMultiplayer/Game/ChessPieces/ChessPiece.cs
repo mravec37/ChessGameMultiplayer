@@ -13,10 +13,9 @@ namespace ChessGameMultiplayer.Game.ChessPieces
             Color = color;
         }
 
-        // Check if the move is legal for this piece type
         public abstract bool IsValidMove(ChessBoard board, Position from, Position to);
 
-        public abstract char GetSymbol(); // e.g. 'p' for pawn, 'K' for black king
+        public abstract char GetSymbol(); //'p' for pawn, 'K' for black king
 
         public abstract List<Square> GetAttackedSquares(ChessBoard board, Position position);
     }

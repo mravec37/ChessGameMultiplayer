@@ -38,60 +38,7 @@ namespace ChessGameMultiplayer.Game.ChessPieces
 
         public override char GetSymbol() => Color == ChessPieceColor.White ? 'b' : 'B';
 
-        /*public override List<Square> GetAttackingSquares(ChessBoard board, Position position)
-        {
-           // Console.WriteLine("Bishop position X: " + position.X + "  Y: " + position.Y);
-            List<Square> attackedSquares = new List<Square>();
-            bool kingAttackingSequenceSet = false;
-
-            int[][] directions = new int[][]
-            {
-                new int[] {1,1 },
-                new int [] {1,-1 },
-                new int [] {-1,1 },
-                new int [] {-1,-1 }
-            };
-
-            foreach(var dir in directions)
-            {
-                int dx = dir[0];
-                int dy = dir[1];
-
-                int x = position.X + dx;
-                int y = position.Y + dy;
-
-                List<Square> kingAttackingSequence = new List<Square>();
-
-                while (x >= 0 && x < 8 && y >= 0 && y < 8)
-                {
-                    Position squarePosition = new Position(x, y);
-                   // Console.WriteLine("Square Position X: " + x + "  Y: " + y);
-                    ChessPiece piece = board.GetPieceAt(squarePosition);
-
-
-                    if (piece != null && piece is King && piece.Color != Color)
-                    {
-                        SlidingPieceAttack.SetKingAttackingSequence(new List<Square>(kingAttackingSequence));
-                        kingAttackingSequenceSet = true;
-                    }
-
-                    attackedSquares.Add(board.GetSquare(squarePosition));
-                    kingAttackingSequence.Add(board.GetSquare(squarePosition));
-
-                    if (piece != null && (!(piece is King) || (piece is King && piece.Color == Color))) break;
-
-                    x += dx;
-                    y += dy;
-                }
-            }
-            if(!kingAttackingSequenceSet)
-            {
-                SlidingPieceAttack.SetKingAttackingSequence(new List<Square>());
-            }
-
-            return attackedSquares;
-        }*/
-
+        //TODO trim this method
         public override List<Square> GetAttackedSquares(ChessBoard board, Position position)
         {
             // Console.WriteLine("Bishop position X: " + position.X + "  Y: " + position.Y);

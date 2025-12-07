@@ -27,7 +27,7 @@ namespace ChessGameMultiplayer.Game.Attack
                 }
             }
 
-            if (piece is Pawn)
+           /* if (piece is Pawn)
             {
                 Console.WriteLine("Square processor attacked squares for Pawn:");
                 foreach (Square square in AttackedSquares)
@@ -51,7 +51,7 @@ namespace ChessGameMultiplayer.Game.Attack
                         Console.WriteLine("Potential attack sequence X: " + pos.X + " Y: " + pos.Y);
                     }
                 }
-            }
+            }*/
         }
 
         private void SetPotentialAttackSequence(List<Square> attackedSquares, ChessPiece piece, ChessBoard board)

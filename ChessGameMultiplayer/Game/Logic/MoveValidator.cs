@@ -37,7 +37,7 @@ namespace ChessGameMultiplayer.Game.Logic
             //ci je kral checknuty - jeho square je attacknuta
             ChessPiece movingPiece = board.GetPieceAt(request.From);
             King king = movingPiece.Color == ChessPieceColor.White ? (King)board.GetPieceAt(board.WhiteKingPos) : (King)board.GetPieceAt(board.BlackKingPos);
-            int numberOfAttacksOnKing = ThreatAnalyzer.GetNumberOfEnemyAttackedSequencesOnPiece(king, board);
+            int numberOfAttacksOnKing = ThreatAnalyzer.GetNumberOfEnemyAttacksOnPiece(king, board);
             if (numberOfAttacksOnKing == 0)
             {
                 return false;

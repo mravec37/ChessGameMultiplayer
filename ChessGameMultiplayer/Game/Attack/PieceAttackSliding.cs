@@ -49,10 +49,7 @@ namespace ChessGameMultiplayer.Game.Attack
                 Console.WriteLine("X: " + pos.X + " Y: " + pos.Y);
             }
 
-            foreach (var square in Squares)
-            {
-                square.AddAttackedSquaresSequence(this);
-            }
+            Squares.ForEach(square => square.AddAttackedSquaresSequence(this));
         }
         public bool AttacksKing()
         {

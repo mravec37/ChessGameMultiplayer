@@ -21,12 +21,13 @@ namespace ChessGameMultiplayer.Game.Logic
             AttackedSquaresByPiece = new Dictionary<ChessPiece, PieceAttack>();
         }
 
+        //TO DO : refactor this method to smaller methods
         public virtual MoveResult MoveIfValid(MoveRequest request)
         {
-            (bool flowControl, MoveResult value) = HandleCastling(request);
-            if (!flowControl)
+            MoveResult castlingResult = HandleCastling(request);
+            if (castlingResult != null)
             {
-                return value;
+                return castlingResult;
             }
 
             if (!MoveValidator.IsMovePossible(request, Board) || MoveValidator.MoveForbidden(request, Board) || MoveValidator.MoveEndangersOwnKing(request, Board, AttackedSquaresByPiece))
@@ -98,9 +99,9 @@ namespace ChessGameMultiplayer.Game.Logic
                     ErrorMessage = "No pawn at the specified position for promotion."
                 };
             }
-            //toto asi netreba
-            PieceAttack capturedPieceAttack = AttackedSquaresByPiece[pawn];
-            capturedPieceAttack.RemoveFromAllSquares();
+
+            /*PieceAttack capturedPieceAttack = AttackedSquaresByPiece[pawn];
+            capturedPieceAttack.RemoveFromAllSquares();*/
 
             AttackedSquaresByPiece.Remove(pawn);
             Board.RemovePiece(pawn);
@@ -113,7 +114,6 @@ namespace ChessGameMultiplayer.Game.Logic
             if (promotedPiece is ChessPieceSlidingAttacker)
             {
                 pieceAttack = new PieceAttackSliding(promotedPiece, Board);
-                //((ChessPieceSlidingAttacker)promotedPiece).SetSlidingPieceAttack((PieceAttackSliding)pieceAttack);
             }
             else
             {
@@ -145,7 +145,6 @@ namespace ChessGameMultiplayer.Game.Logic
         {
             return promotionType switch
             {
-               
                 "Rook" => new Rook(color),
                 "Knight" => new Knight(color),
                 "Bishop" => new Bishop(color),
@@ -153,7 +152,7 @@ namespace ChessGameMultiplayer.Game.Logic
             };
         }
 
-        private (bool flowControl, MoveResult value) HandleCastling(MoveRequest request)
+        private MoveResult HandleCastling(MoveRequest request)
         {
             if (CastlingHandler.IsCastlingMove(Board, request.From, request.To))
             {
@@ -161,10 +160,10 @@ namespace ChessGameMultiplayer.Game.Logic
                 MoveResult moveResult = CastlingHandler.HandleCastling(Board, request.From, request.To);
                 UpdatePieceAttackSliding();
                 AttackedSquaresByPiece[rook].UpdateAttackedSquares();
-                return (flowControl: false, value: moveResult);
+                return moveResult;
             }
 
-            return (flowControl: true, value: null);
+            return null;
         }
 
         private MoveResult HandlePromotion(ChessPiece movingPiece, Position from, Position to)
@@ -206,6 +205,8 @@ namespace ChessGameMultiplayer.Game.Logic
             }
         }
 
+
+        //TO DO put en passant handling to separate class
         private ChessPiece HandleEnPassant(Position from, Position to, ChessPiece? movingPiece)
         {
             if (movingPiece is Pawn movingPawn)
@@ -217,7 +218,7 @@ namespace ChessGameMultiplayer.Game.Logic
                 }
                 else
                 {
-                    //Check if pawn captured en passant
+                    //Check if pawn captured by en passant
                     foreach (var kvp in Board.enPassantPos)
                     {
                         Pawn enPassantPawn = kvp.Key;
@@ -225,10 +226,8 @@ namespace ChessGameMultiplayer.Game.Logic
                         if (to.X == enPassantGhostPos.X && to.Y == enPassantGhostPos.Y && Math.Abs(to.X - from.X) == 1 && to.Y == from.Y + (movingPawn.Color == ChessPieceColor.White ? -1 : 1))
                         {
                             Console.WriteLine("En passant capture of piece: " + enPassantPawn.GetType() + " " + enPassantPawn.Color + " at position: " + Board.GetPiecePosition(enPassantPawn).X + ", " + Board.GetPiecePosition(enPassantPawn).Y);
-                            Position capturedPawnPos = new Position(to.X, from.Y);
-                            //ChessPiece capturedPawn = Board.GetPieceAt(capturedPawnPos);
+                            Position capturedPawnPos = new Position(to.X, from.Y);  
                             ClearCapturedPiece(enPassantPawn);
-                            //Board.MovePiece(capturedPawnPos, new Position(-1, -1)); // Remove captured pawn from the board
                             Board.RemovePieceFromSquare(capturedPawnPos);
                             return enPassantPawn;
                         }
@@ -311,7 +310,6 @@ namespace ChessGameMultiplayer.Game.Logic
                 if (piece is ChessPieceSlidingAttacker)
                 {
                     pieceAttack = new PieceAttackSliding(piece, Board);
-                    ((ChessPieceSlidingAttacker)piece).SetSlidingPieceAttack((PieceAttackSliding)pieceAttack);
                 }
                 else
                 {
@@ -322,29 +320,5 @@ namespace ChessGameMultiplayer.Game.Logic
                 pieceAttack.UpdateAttackedSquares();
             }
         }
-
-
-        /*public void NewGame()
-         {
-            List<ChessPiece> pieces = Board.InitializeStartingPositions();
-            foreach (var piece in pieces)
-            {
-                if(piece.Color == ChessPieceColor.White)
-                {
-                    var sequence = new AttackedSquaresSequence(piece, Board);
-                    WhiteAttackedSquaresSequences.Add(sequence);
-                    sequence.UpdateAttackedSquares();
-
-                }
-                else
-                {
-                    var sequence = new AttackedSquaresSequence(piece, Board);
-                    BlackAttackedSquaresSequences.Add(sequence);
-                    sequence.UpdateAttackedSquares();
-                }
-            }
-
-         }*/
-
     }
 }

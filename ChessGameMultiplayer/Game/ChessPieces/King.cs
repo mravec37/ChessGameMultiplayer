@@ -5,8 +5,8 @@ namespace ChessGameMultiplayer.Game.ChessPieces
 {
     public class King : ChessPiece, IMoveState
     {
-        public King(ChessPieceColor color) : base(color) { }
         private bool Moved = false;
+        public King(ChessPieceColor color) : base(color) { }
 
         public override bool IsValidMove(ChessBoard board, Position from, Position to)
         {
@@ -17,9 +17,9 @@ namespace ChessGameMultiplayer.Game.ChessPieces
 
             if (Math.Abs(from.X - to.X) <= 1 && Math.Abs(from.Y - to.Y) <= 1)
             {
-                return true; // King can move one square in any direction
+                return true; 
             }
-            return false; // Invalid move for king;
+            return false; 
         }
 
         public override char GetSymbol() => Color == ChessPieceColor.White ? 'k' : 'K';
