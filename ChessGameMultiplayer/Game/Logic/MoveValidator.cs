@@ -2,6 +2,7 @@
 using ChessGameMultiplayer.Game.Attack;
 using ChessGameMultiplayer.Game.Board;
 using ChessGameMultiplayer.Game.ChessPieces;
+using System.Drawing;
 
 namespace ChessGameMultiplayer.Game.Logic
 {
@@ -32,7 +33,7 @@ namespace ChessGameMultiplayer.Game.Logic
             return true;
         }
 
-        public static bool MoveForbidden(MoveRequest request, ChessBoard board)
+        public static bool IsMoveForbidden(MoveRequest request, ChessBoard board)
         {
             //ci je kral checknuty - jeho square je attacknuta
             ChessPiece movingPiece = board.GetPieceAt(request.From);
@@ -116,17 +117,12 @@ namespace ChessGameMultiplayer.Game.Logic
                         bool onlyDefender = true;
                         foreach (Square square in attackSequence)
                         {
-                            if (square.Piece != null)
-                            {
-                                if (square.Piece == movingPiece)
-                                {
-                                    blocksAttack = true;
-                                }
-                                else
-                                {
-                                    onlyDefender = false;
-                                }
-                            }
+                            if (square.Piece == null) continue;
+
+                            if (square.Piece == movingPiece)
+                                blocksAttack = true;
+                            else
+                                onlyDefender = false;
                         }
                         if (blocksAttack && onlyDefender && !ThreatAnalyzer.InTheLineOfDefense(attackSequence, request.To, board.GetPiecePosition(piece), board))
                         {
@@ -138,6 +134,12 @@ namespace ChessGameMultiplayer.Game.Logic
             }
             return false;
         }
-
+        public static bool CurrentTurnPlayerMove(MoveRequest request, ChessPieceColor currentTurn)
+        {
+            char pieceSign = request.Piece[0];
+            ChessPieceColor movingPieceColor = char.IsLower(pieceSign) ? ChessPieceColor.White : ChessPieceColor.Black;
+            Console.WriteLine("Current turn color: " + currentTurn + " moving piece color: " + movingPieceColor);
+            return movingPieceColor == currentTurn;
+        }
     }
 }

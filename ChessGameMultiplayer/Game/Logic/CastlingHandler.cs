@@ -44,14 +44,14 @@ namespace ChessGameMultiplayer.Game.Logic
                             from = from,
                             to = newKingPos,
                             Piece = king,
-                            Type = MoveEffectType.Castling
+                            Type = MoveEffectType.CASTLING
                         },
                         new MoveEffect
                         {
                             from = to,
                             to = newRookPos,
                             Piece = rook,
-                            Type = MoveEffectType.Castling
+                            Type = MoveEffectType.CASTLING
                         }
                     }
             };

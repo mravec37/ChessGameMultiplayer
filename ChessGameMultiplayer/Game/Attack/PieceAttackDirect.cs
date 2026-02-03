@@ -11,13 +11,13 @@ namespace ChessGameMultiplayer.Game.Attack
 
         public override void UpdateAttackedSquares()
         {
-            Console.WriteLine("Updatujem attacked square pre piece: " + Piece.GetType().Name);
+            Console.WriteLine("Updatujem attacked square pre piece: " + Piece.GetType().Name + " na pozicii: " + Board.GetPiecePosition(Piece).X + ":" + Board.GetPiecePosition(Piece).Y);
             RemoveFromAllSquares();
 
-            Position PiecePosition = Board.GetPiecePosition(Piece);
+            Position piecePosition = Board.GetPiecePosition(Piece);
           
             SquareProcessor squareProcessor = new SquareProcessor();
-            squareProcessor.UpdatePieceAttackSequences(Board, PiecePosition);
+            squareProcessor.UpdatePieceAttackSequences(Board, piecePosition);
             Squares = squareProcessor.AttackedSquares;
 
             foreach (var square in Squares)

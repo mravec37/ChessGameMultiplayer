@@ -12,7 +12,7 @@ namespace ChessGameMultiplayer.Controllers
     public class GameController : ControllerBase
     {
 
-        private readonly GameContainer _chessEngine;
+        private readonly GameContainer gameContainer;
         private readonly ILogger<HomeController> _logger;
         int numOfCalls = 0;
         bool firstTime = true;
@@ -20,7 +20,7 @@ namespace ChessGameMultiplayer.Controllers
 
         public GameController(GameContainer chessEngine, ILogger<HomeController> logger)
         {
-            _chessEngine = chessEngine;
+            gameContainer = chessEngine;
             _logger = logger;
         }
 
@@ -65,13 +65,13 @@ namespace ChessGameMultiplayer.Controllers
         //return Ok(storedPieces);
         //}*/
 
-        [HttpGet("NewGame")]
+       /* [HttpGet("NewGame")]
         public IActionResult NewGame()
         {
             if (firstTime)
             {
                 _logger.LogInformation("New game started");
-                _chessEngine.NewGame();
+                gameContainer.NewGame();
 
                 var pieces = new List<object>
         {
@@ -123,7 +123,7 @@ namespace ChessGameMultiplayer.Controllers
 
             return Ok(storedPieces);
         }
-
+       */
 
         /* [HttpGet("NewGame")]
          public IActionResult NewGame()
@@ -184,16 +184,16 @@ namespace ChessGameMultiplayer.Controllers
 
 
 
-        [HttpPost("MovePiece")]
+       /* [HttpPost("MovePiece")]
         public IActionResult MovePiece([FromBody] MoveRequest move)
         {
             _logger.LogInformation("Move piece endpoint");
             LogMoveRequest(move);
-            MoveResult moveResult =  _chessEngine.MoveIfValid(move);
+            MoveResult moveResult =  gameContainer.MoveIfValid(move);
             LogMoveResult(moveResult);
             var dtoList = MoveConverter.ConvertToDtoList(moveResult);
             return Ok(dtoList);
-        }
+        }*/
 
 
         [HttpPost("PromotionChoice")]
@@ -201,7 +201,7 @@ namespace ChessGameMultiplayer.Controllers
         {
             _logger.LogInformation("PromotionChoice endpoint");
             Console.WriteLine("PromotionChoice endpoint");
-            MoveResult moveResult = _chessEngine.PromotionChoice(promotionRequest);
+            MoveResult moveResult = gameContainer.PromotionChoice(promotionRequest);
             LogMoveResult(moveResult);
             var dtoList = MoveConverter.ConvertToDtoList(moveResult);
             return Ok(dtoList);

@@ -12,8 +12,7 @@ namespace ChessGameMultiplayer.Game.Logic
     {
         public ChessBoard Board { get; }
         public Dictionary<ChessPiece, PieceAttack> AttackedSquaresByPiece { get; private set; }
-
-        ChessPieceColor currentTurn = ChessPieceColor.White;
+       
 
         public ChessEngine()
         {
@@ -22,7 +21,7 @@ namespace ChessGameMultiplayer.Game.Logic
         }
 
         //TO DO : refactor this method to smaller methods
-        public virtual MoveResult MoveIfValid(MoveRequest request)
+        public MoveResult MoveIfValid(MoveRequest request)
         {
             MoveResult castlingResult = HandleCastling(request);
             if (castlingResult != null)
@@ -30,7 +29,7 @@ namespace ChessGameMultiplayer.Game.Logic
                 return castlingResult;
             }
 
-            if (!MoveValidator.IsMovePossible(request, Board) || MoveValidator.MoveForbidden(request, Board) || MoveValidator.MoveEndangersOwnKing(request, Board, AttackedSquaresByPiece))
+            if (!MoveValidator.IsMovePossible(request, Board) || MoveValidator.IsMoveForbidden(request, Board) || MoveValidator.MoveEndangersOwnKing(request, Board, AttackedSquaresByPiece))
             {
                 return new MoveResult
                 {
@@ -59,22 +58,27 @@ namespace ChessGameMultiplayer.Game.Logic
                 return HandlePromotion(movingPiece, from, to);
             }
             GameStateChecker.CheckStaleMate(movingPiece.Color, Board, AttackedSquaresByPiece);
+            // stalemate
+            //
+            //
+            GameState gameState;
             if (movingPiece is King)
             {
                 UpdatePieceAttackSliding();
+                gameState = GameState.FREE;
             }
             else
             {
-                GameStateChecker.CheckForKingsCheckOrCheckmate(Board, AttackedSquaresByPiece);
+                gameState = GameStateChecker.CheckForKingsCheckOrCheckmate(Board, AttackedSquaresByPiece);
             }
 
-            var effects = CreateMoveEffects(from, to, captured);
+            var effects = CreateMoveEffects(from, to, captured, gameState);
             if (enPassantCapture != null)
             {
                 Position capturedPos = new Position(to.X, from.Y);
                 effects.Add(new MoveEffect
                 {
-                    Type = MoveEffectType.Capture,
+                    Type = MoveEffectType.CAPTURE,
                     to = capturedPos,
                     Piece = enPassantCapture
                 });
@@ -113,6 +117,7 @@ namespace ChessGameMultiplayer.Game.Logic
             PieceAttack pieceAttack = null;
             if (promotedPiece is ChessPieceSlidingAttacker)
             {
+                Console.WriteLine("Promoted piece is sliding attacker");
                 pieceAttack = new PieceAttackSliding(promotedPiece, Board);
             }
             else
@@ -124,21 +129,53 @@ namespace ChessGameMultiplayer.Game.Logic
             pieceAttack.UpdateAttackedSquares();
 
             GameStateChecker.CheckStaleMate(promotedPiece.Color, Board, AttackedSquaresByPiece);
-            GameStateChecker.CheckForKingsCheckOrCheckmate(Board, AttackedSquaresByPiece);
+            //stalemate check after promotion
+            ///
+            ///
+            //
+            //
+            //
+            //
+            //
+            //
+            //
+            //
+            //
 
-            return new MoveResult
+           GameState gameState =  GameStateChecker.CheckForKingsCheckOrCheckmate(Board, AttackedSquaresByPiece);
+
+           
+
+            MoveResult promotionResult =  new MoveResult
             {
                 IsValid = true,
                 Affected = new List<MoveEffect>
                 {
                     new MoveEffect
                     {
-                        Type = MoveEffectType.Promoted,
+                        Type = MoveEffectType.PROMOTED,
                         to = request.pawnPosition,
                         Piece = promotedPiece
                     }
                 }
             };
+            if(gameState == GameState.CHECK)
+            {
+                promotionResult.Affected.Add(new MoveEffect
+                {
+                    Type = MoveEffectType.CHECK,
+                    to = pawn.Color == ChessPieceColor.White ? Board.BlackKingPos : Board.WhiteKingPos
+                });
+            } 
+            else if(gameState == GameState.CHECKMATE)
+            {
+                promotionResult.Affected.Add(new MoveEffect
+                {
+                    Type = MoveEffectType.CHECKMATE,
+                    to = pawn.Color == ChessPieceColor.White ? Board.BlackKingPos : Board.WhiteKingPos
+                });
+            }
+                return promotionResult;
         }
 
         private ChessPiece GetPromotedPiece(String promotionType, ChessPieceColor color)
@@ -175,7 +212,7 @@ namespace ChessGameMultiplayer.Game.Logic
                 {
                     new MoveEffect
                     {
-                        Type = MoveEffectType.Promotion,
+                        Type = MoveEffectType.PROMOTION,
                         to = to,
                         from = from,
                         Piece = movingPiece
@@ -275,7 +312,7 @@ namespace ChessGameMultiplayer.Game.Logic
             }
         }
 
-        protected virtual List<MoveEffect> CreateMoveEffects(Position from, Position to, ChessPiece? captured)
+        protected virtual List<MoveEffect> CreateMoveEffects(Position from, Position to, ChessPiece? captured, GameState gameState)
         {
             var effects = new List<MoveEffect>();
 
@@ -283,15 +320,33 @@ namespace ChessGameMultiplayer.Game.Logic
             {
                 effects.Add(new MoveEffect
                 {
-                    Type = MoveEffectType.Capture,
+                    Type = MoveEffectType.CAPTURE,
                     to = to,
                     Piece = captured
                 });
             }
 
+            if (gameState == GameState.CHECKMATE)
+            {
+                effects.Add(new MoveEffect
+                {
+                    Type = MoveEffectType.CHECKMATE,
+                    to = Board.GetPieceAt(to).Color == ChessPieceColor.White? Board.BlackKingPos : Board.WhiteKingPos
+                });
+            }
+
+            if (gameState == GameState.CHECK)
+            {
+                effects.Add(new MoveEffect
+                {
+                    Type = MoveEffectType.CHECK,
+                    to = Board.GetPieceAt(to).Color == ChessPieceColor.White ? Board.BlackKingPos : Board.WhiteKingPos
+                });
+            }
+
             effects.Add(new MoveEffect
             {
-                Type = MoveEffectType.Move,
+                Type = MoveEffectType.MOVE,
                 to = to,
                 from = from,
                 //Piece = this

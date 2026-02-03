@@ -216,13 +216,18 @@ public class ChessBoard
         MovePieceToSquare(new Position(0, 6), p06); PiecesPos[p06] = new Position(0, 6); createdPieces.Add(p06);
 
         var p16 = new Pawn(ChessPieceColor.White);
-        MovePieceToSquare(new Position(1, 6), p16); PiecesPos[p16] = new Position(1, 6); createdPieces.Add(p16);
+        MovePieceToSquare(new Position(1, 1), p16); PiecesPos[p16] = new Position(1, 1); createdPieces.Add(p16);
+
+        var p46 = new Pawn(ChessPieceColor.White);
+        MovePieceToSquare(new Position(4, 6), p46); PiecesPos[p46] = new Position(4, 6); createdPieces.Add(p46);
 
         var p56 = new Pawn(ChessPieceColor.White);
         MovePieceToSquare(new Position(5, 6), p56); PiecesPos[p56] = new Position(5, 6); createdPieces.Add(p56);
 
         var p76 = new Pawn(ChessPieceColor.White);
         MovePieceToSquare(new Position(7, 6), p76); PiecesPos[p76] = new Position(7, 6); createdPieces.Add(p76);
+
+
 
 
         // Rank 1 (y = 7): . . K . R . R .

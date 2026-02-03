@@ -62,7 +62,7 @@ namespace ChessGameMultiplayer.Game.Logic
             }
             Console.WriteLine("STALEMATE!");
         }
-        public static void CheckForKingsCheckOrCheckmate(ChessBoard board, Dictionary<ChessPiece, PieceAttack> attackedSquaresByPiece)
+        public static GameState CheckForKingsCheckOrCheckmate(ChessBoard board, Dictionary<ChessPiece, PieceAttack> attackedSquaresByPiece)
         {
             //Check if the move puts the king in check or causes a checkmate
 
@@ -72,9 +72,12 @@ namespace ChessGameMultiplayer.Game.Logic
                 if (sequences.Piece.Color == ChessPieceColor.Black)
                 {
                     Console.WriteLine("White king is in check!");
-                    CheckForCheckmate(board.WhiteKingPos, board, attackedSquaresByPiece);
-                    //if its checkmate, send it to the client
-                    //if not, send check to client
+                    bool checkmate = CheckForCheckmate(board.WhiteKingPos, board, attackedSquaresByPiece);
+                    if(checkmate)
+                    {
+                        return GameState.CHECKMATE;
+                    }
+                    return GameState.CHECK;
                 }
             }
 
@@ -86,12 +89,18 @@ namespace ChessGameMultiplayer.Game.Logic
                 if (sequences.Piece.Color == ChessPieceColor.White)
                 {
                     Console.WriteLine("Black king is in check!");
-                    CheckForCheckmate(board.BlackKingPos, board, attackedSquaresByPiece);
+                    bool checkmate = CheckForCheckmate(board.BlackKingPos, board, attackedSquaresByPiece);
+                    if (checkmate)
+                    {
+                        return GameState.CHECKMATE;
+                    }
+                    return GameState.CHECK;
                 }
             }
+            return GameState.FREE;
         }
 
-        public static void CheckForCheckmate(Position kingPosition, ChessBoard board, Dictionary<ChessPiece, PieceAttack> attackedSquaresByPiece)
+        public static bool CheckForCheckmate(Position kingPosition, ChessBoard board, Dictionary<ChessPiece, PieceAttack> attackedSquaresByPiece)
         {
             King king = (King)board.GetPieceAt(kingPosition);
             List<Square> possibleMoves = king.GetPossibleMoves(board, kingPosition);
@@ -135,8 +144,14 @@ namespace ChessGameMultiplayer.Game.Logic
                 Console.WriteLine("ATTACK NOT BLOCKABLE");
             }
 
-            if (!kingCanMove && !attackBlockable) { Console.WriteLine("CHECKMATE"); }
-            else { Console.WriteLine("NOT CHECKMATE"); }
+            if (!kingCanMove && !attackBlockable) { 
+                Console.WriteLine("CHECKMATE");
+                return true;
+            }
+            else { 
+                Console.WriteLine("NOT CHECKMATE");
+                return false;
+            }
             //  }
         }
 

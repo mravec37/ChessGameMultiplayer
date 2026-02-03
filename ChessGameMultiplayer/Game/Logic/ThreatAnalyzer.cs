@@ -1,4 +1,5 @@
-﻿using ChessGameMultiplayer.Game.Attack;
+﻿using ChessGameMultiplayer.Dto;
+using ChessGameMultiplayer.Game.Attack;
 using ChessGameMultiplayer.Game.Board;
 using ChessGameMultiplayer.Game.ChessPieces;
 
@@ -88,7 +89,15 @@ namespace ChessGameMultiplayer.Game.Logic
                 {
                     foreach (Square squareToBlock in squaresToBlock)
                     {
-                        if (possibleMove == squareToBlock)
+
+                        //Nemoze sa len kontrolovat ci sa moze dostat na tuto square, ale aj ci sa nenachadza v nepriatelskej
+                        //sekvencii ktora mieri na krala a je jedinym piecom medzi attackerom a kralom
+                        MoveRequest moveRequest = new MoveRequest
+                        {
+                            From = board.GetPiecePosition(piece),
+                            To = board.squarePositions[squareToBlock]
+                        };
+                        if (possibleMove == squareToBlock && !MoveValidator.MoveEndangersOwnKing(moveRequest, board, attackedSquaresByPiece))
                         {
                             //ak je pawn tak treba skontrolovat ci vyhodenie takisto blokne 
                             Console.WriteLine("Attack can be blocked by: " + piece.Color + " " + piece.GetType() + " at: " + board.squarePositions[possibleMove].X + ", " + board.squarePositions[possibleMove].Y);

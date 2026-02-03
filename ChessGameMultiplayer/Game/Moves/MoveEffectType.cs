@@ -2,13 +2,14 @@
 {
     public enum MoveEffectType
     {
-        Move,
-        Capture,
-        Castling,
-        Promotion,
-        EnPassant,
-        Check,
-        Remove,
-        Promoted
+        MOVE,
+        CAPTURE,
+        CASTLING,
+        PROMOTION,
+        EN_PASSANT,
+        CHECK,
+        CHECKMATE,
+        REMOVE,
+        PROMOTED
     }
 }

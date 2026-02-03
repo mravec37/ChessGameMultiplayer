@@ -76,3 +76,27 @@
 .hidden {
     display: none;
 }
+
+.flipped {
+    transform: rotate(180deg);
+}
+
+.flipped img {
+    transform: rotate(180deg);
+}
+
+.clock {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 2px solid #333;
+    border-radius: 5px;
+    text-align: center;
+    width: 60px;
+}
+.square.in-check {
+    background-color: rgba(255, 0, 0, 0.6) !important;
+}
