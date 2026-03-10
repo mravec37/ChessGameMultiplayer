@@ -27,9 +27,9 @@ namespace ChessGameMultiplayer.Game.Attack
                 }
             }
 
-            if (piece is Pawn)
+            if (piece is Rook)
             {
-                Console.WriteLine("Square processor attacked squares for Pawn:");
+                Console.WriteLine("Square processor attacked squares for Rook:");
                 foreach (Square square in AttackedSquares)
                 {
                     Position pos = board.squarePositions[square];
@@ -56,11 +56,25 @@ namespace ChessGameMultiplayer.Game.Attack
 
         private void SetPotentialAttackSequence(List<Square> attackedSquares, ChessPiece piece, ChessBoard board)
         {
-            if (piece is ChessPieceSlidingAttacker slidingAttacker && slidingAttacker.AimsAtKing)
+            /*if (piece is ChessPieceSlidingAttacker slidingAttacker && slidingAttacker.AimsAtKing)
             {
 
                 Console.WriteLine("Setting potential attack sequence for piece: " + piece.GetType().Name);
                 PotentialAttackSequence = GetKingAttackingSquares(attackedSquares, piece, board);
+            }*/
+
+            if (piece is ChessPieceSlidingAttacker slidingAttacker)
+            {
+                if (slidingAttacker.AimsAtKing)
+                {
+                    Console.WriteLine("Setting potential attack sequence for piece: " + piece.GetType().Name);
+                    PotentialAttackSequence = GetKingAttackingSquares(attackedSquares, piece, board);
+                }
+                else
+                {
+                    PotentialAttackSequence = null;
+                    Console.WriteLine("Sliding Piece does not potentially attack king: " + piece.GetType().Name);
+                }
             }
         }
 
@@ -75,6 +89,7 @@ namespace ChessGameMultiplayer.Game.Attack
                     KingAttackSequence = GetKingAttackingSquares(attackedSquares, piece, board);
                 } else
                 {
+                    KingAttackSequence = null;
                     Console.WriteLine("Sliding Piece does not attack king: " + piece.GetType().Name);
                 }
               
@@ -101,7 +116,7 @@ namespace ChessGameMultiplayer.Game.Attack
 
                     if (dx == slidingAttacker.KingDirection[0] && dy == slidingAttacker.KingDirection[1])
                     {
-                        Console.WriteLine("Square is in king direction");
+                        Console.WriteLine("Square is in king direction, king direction is: " + slidingAttacker.KingDirection[0] + ":" + slidingAttacker.KingDirection[1]);
                         //if we reached the enemy king, stop and return squares
                         if (squarePiece != null && squarePiece is King && squarePiece.Color != piece.Color)
                         {

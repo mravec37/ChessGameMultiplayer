@@ -120,7 +120,10 @@ namespace ChessGameMultiplayer.Game.Logic
                             if (square.Piece == null) continue;
 
                             if (square.Piece == movingPiece)
+                            {
                                 blocksAttack = true;
+                                Console.WriteLine("Moving piece " + movingPiece.GetType() + " blocks the attack at: " + board.GetPiecePosition(movingPiece).X + " : " + board.GetPiecePosition(movingPiece).Y);
+                            }
                             else
                                 onlyDefender = false;
                         }
@@ -134,6 +137,7 @@ namespace ChessGameMultiplayer.Game.Logic
             }
             return false;
         }
+
         public static bool CurrentTurnPlayerMove(MoveRequest request, ChessPieceColor currentTurn)
         {
             char pieceSign = request.Piece[0];

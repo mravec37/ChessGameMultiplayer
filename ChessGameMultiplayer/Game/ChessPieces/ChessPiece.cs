@@ -18,6 +18,10 @@ namespace ChessGameMultiplayer.Game.ChessPieces
         public abstract char GetSymbol(); //'p' for pawn, 'K' for black king
 
         public abstract List<Square> GetAttackedSquares(ChessBoard board, Position position);
+
+        public abstract List<Square> GetPossibleMoves(ChessBoard board, Position position);
+
+        public abstract List<Position> GetMoveSquares(Position positionTo, Position positionFrom);
     }
 
 }

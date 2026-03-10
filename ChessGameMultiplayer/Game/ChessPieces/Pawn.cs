@@ -128,7 +128,7 @@ namespace ChessGameMultiplayer.Game.ChessPieces
         }
 
 
-        public List<Square> GetPossibleMoves(ChessBoard board, Position position)
+        public override List<Square> GetPossibleMoves(ChessBoard board, Position position)
         {
             List<Square> possibleMoves = new List<Square>();
 
@@ -142,13 +142,13 @@ namespace ChessGameMultiplayer.Game.ChessPieces
             Console.WriteLine("Pawn position X: " + position.X + " Y: " + position.Y);
 
             //check if theres a piece on attacking positions to check if the pawn can move here
-            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && (board.GetSquare(new Position(dx, dy)).Piece != null || EnPassantPosition(board, new Position(dx, dy))))
+            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && ((board.GetSquare(new Position(dx, dy)).Piece != null && board.GetSquare(new Position(dx, dy)).Piece.Color != Color) || EnPassantPosition(board, new Position(dx, dy))))
             {
                 Console.WriteLine("pawn can move to X: " + dx + " Y: " + dy);
                 possibleMoves.Add(board.GetSquare(new Position(dx, dy)));
             }
             dx = position.X - 1;
-            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && (board.GetSquare(new Position(dx, dy)).Piece != null || EnPassantPosition(board, new Position(dx, dy))))
+            if (dx >= 0 && dx < 8 && dy >= 0 && dy < 8 && ((board.GetSquare(new Position(dx, dy)).Piece != null && board.GetSquare(new Position(dx, dy)).Piece.Color != Color) || EnPassantPosition(board, new Position(dx, dy))))
             {
                 Console.WriteLine("pawn can move to X: " + dx + " Y: " + dy);
                 possibleMoves.Add(board.GetSquare(new Position(dx, dy)));
@@ -174,7 +174,7 @@ namespace ChessGameMultiplayer.Game.ChessPieces
                 doubleMoveY = 1;
             }
 
-            if (dx >= 0 && dx < 8 && position.Y == doubleMoveY && board.GetSquare(new Position(dx, dy)).Piece == null)
+            if (dx >= 0 && dx < 8 && position.Y == doubleMoveY && board.GetSquare(new Position(dx, dy)).Piece == null && board.GetSquare(new Position(dx, dy - coeficientY)).Piece == null)
             {
                 Console.WriteLine("pawn can move to X: " + dx + " Y: " + dy);
                 possibleMoves.Add(board.GetSquare(new Position(dx, dy)));
@@ -194,6 +194,35 @@ namespace ChessGameMultiplayer.Game.ChessPieces
                 }
             }
             return false;
+        }
+
+        public override List<Position> GetMoveSquares(Position positionTo, Position positionFrom)
+        {
+            int dx = positionTo.X - positionFrom.X;
+            int dy = positionTo.Y - positionFrom.Y;
+
+            if (dx != 0) dx = dx / Math.Abs(dx);
+            if (dy != 0) dy = dy / Math.Abs(dy);
+
+            var positions = new List<Position>();
+            positions.Add(positionFrom);
+            int currentPosX = positionFrom.X;
+            int currentPosY = positionFrom.Y;
+
+
+            while (currentPosX != positionTo.X || currentPosY != positionTo.Y)
+            {
+                currentPosX += dx;
+                currentPosY += dy;
+                positions.Add(new Position(currentPosX, currentPosY));
+            }
+
+            Console.WriteLine("Printing move square positions");
+            foreach (Position position in positions)
+            {
+                Console.WriteLine("X: " + position.X + " " + position.Y);
+            }
+            return positions;
         }
     }
 }

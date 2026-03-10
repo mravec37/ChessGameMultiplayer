@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -65,5 +65,35 @@ body {
     border-radius: 12px;
     font-size: 24px;
     font-weight: bold;
+    text-align: center;
+}
+.game-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    width: 100%;
+}
+
+
+/* Clock column */
+.clocks {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 600px; /* change if your board size differs */
+    width: 90px;
+}
+
+/* Clock visuals */
+.clock {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 2px solid #333;
+    border-radius: 5px;
     text-align: center;
 }

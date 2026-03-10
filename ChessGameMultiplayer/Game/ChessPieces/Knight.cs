@@ -54,5 +54,28 @@ namespace ChessGameMultiplayer.Game.ChessPieces
 
             return attackedSquares;
         }
+
+        public override List<Square> GetPossibleMoves(ChessBoard board, Position position)
+        {
+            var attackedSquares = GetAttackedSquares(board, position);
+            var possibleMoves = new List<Square>();
+
+            foreach(Square square in attackedSquares)
+            {
+                var piece = board.GetPieceAt(board.squarePositions[square]);
+
+                if (piece != null && piece.Color == Color || piece is King) continue;
+
+                possibleMoves.Add(square);
+
+            }
+
+            return possibleMoves;
+        }
+
+        public override List<Position> GetMoveSquares(Position positionTo, Position positionFrom)
+        {
+            return new List<Position> { positionTo, positionFrom };
+        }
     }
 }

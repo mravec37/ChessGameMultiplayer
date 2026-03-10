@@ -54,7 +54,7 @@ namespace ChessGameMultiplayer.Game.ChessPieces
             return attackedSquares;
         }
 
-        public List<Square> GetPossibleMoves(ChessBoard board, Position position)
+        public override List<Square> GetPossibleMoves(ChessBoard board, Position position)
         {
             List<Square> attackedSquares = GetAttackedSquares(board, position);
             List<Square> possibleMoves = new List<Square>();
@@ -78,6 +78,11 @@ namespace ChessGameMultiplayer.Game.ChessPieces
         public void MarkAsMoved()
         {
             Moved = true;
+        }
+
+        public override List<Position> GetMoveSquares(Position positionTo, Position positionFrom)
+        {
+            return new List<Position> { positionTo, positionFrom };
         }
     }
 }

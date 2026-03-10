@@ -22,6 +22,17 @@ namespace ChessGameMultiplayer.Game.Logic
             return numberOfEnemyPieceAttacks;
         }
 
+        public static bool IsSquareAttackedByEnemy(Square square, ChessPieceColor friendlyColor)
+        {
+           
+            foreach (PieceAttack pieceAttack in square.PieceAttacks)
+            {
+                if (pieceAttack.Piece.Color != friendlyColor) return true;
+            }
+
+            return false;
+        }
+
         public static bool IsSquareAttackedByEnemy(Position position, ChessPieceColor friendlyColor, ChessBoard board)
         {
             Square square = board.GetSquare(position);
@@ -64,7 +75,14 @@ namespace ChessGameMultiplayer.Game.Logic
 
             if (pieceAttack is PieceAttackSliding)
             {
-                squaresToBlock.AddRange(((PieceAttackSliding)pieceAttack).KingAttackingSequence);
+                if (((PieceAttackSliding)pieceAttack).KingAttackingSequence == null)
+                {
+                    Console.WriteLine("King attack sequence is null");
+                }
+                else
+                {
+                    squaresToBlock.AddRange(((PieceAttackSliding)pieceAttack).KingAttackingSequence);
+                }
             }
 
             Console.WriteLine("Number of pieces is: " + attackedSquaresByPiece.Count);

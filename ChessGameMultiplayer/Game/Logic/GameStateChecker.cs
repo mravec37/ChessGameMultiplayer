@@ -7,14 +7,14 @@ namespace ChessGameMultiplayer.Game.Logic
 {
     public static class GameStateChecker
     {
-        public static void CheckStaleMate(ChessPieceColor friendlyColor, ChessBoard board, Dictionary<ChessPiece, PieceAttack> attackedSquaresByPiece)
+        public static bool CheckStaleMate(ChessPieceColor friendlyColor, ChessBoard board, Dictionary<ChessPiece, PieceAttack> attackedSquaresByPiece)
         {
             //enemy king shold not be in check
             King enemyKing = friendlyColor == ChessPieceColor.White ? (King)board.GetPieceAt(board.BlackKingPos) : (King)board.GetPieceAt(board.WhiteKingPos);
             if (ThreatAnalyzer.GetNumberOfEnemyAttacksOnPiece(enemyKing, board) > 0)
             {
                 Console.WriteLine("Not stalemate, king is in check.");
-                return;
+                return false;
             }
 
             //prejst vsetky pieces a pozriet ci maju validny move a zaroven neohrozia vlastneho krala
@@ -37,7 +37,7 @@ namespace ChessGameMultiplayer.Game.Logic
                             if (piece.IsValidMove(board, piecePos, targetPos) && !MoveValidator.MoveEndangersOwnKing(moveRequest, board, attackedSquaresByPiece))
                             {
                                 Console.WriteLine("Not stalemate, piece can move.");
-                                return;
+                                return false;
                             }
                         }
                         continue;
@@ -55,12 +55,13 @@ namespace ChessGameMultiplayer.Game.Logic
                         if (piece.IsValidMove(board, piecePos, targetPos) && !MoveValidator.MoveEndangersOwnKing(moveRequest, board, attackedSquaresByPiece))
                         {
                             Console.WriteLine("Not stalemate, piece can move.");
-                            return;
+                            return false;
                         }
                     }
                 }
             }
             Console.WriteLine("STALEMATE!");
+            return true; 
         }
         public static GameState CheckForKingsCheckOrCheckmate(ChessBoard board, Dictionary<ChessPiece, PieceAttack> attackedSquaresByPiece)
         {

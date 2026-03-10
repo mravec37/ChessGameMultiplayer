@@ -150,104 +150,176 @@ public class ChessBoard
         }
         return createdPieces;*/
 
+        /*  InitializeSquares();
+          var createdPieces = new List<ChessPiece>();
+
+          // Rank 8 (y = 0): b . . . . r k .
+          var p00 = new Bishop(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(0, 0), p00); PiecesPos[p00] = new Position(0, 0); createdPieces.Add(p00);
+
+          var p50 = new Rook(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(5, 0), p50); PiecesPos[p50] = new Position(5, 0); createdPieces.Add(p50);
+
+          var p60 = new King(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(6, 0), p60); PiecesPos[p60] = new Position(6, 0); createdPieces.Add(p60);
+
+
+          // Rank 7 (y = 1): . . . . b p p p
+          var p41 = new Bishop(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(4, 1), p41); PiecesPos[p41] = new Position(4, 1); createdPieces.Add(p41);
+
+          var p51 = new Pawn(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(5, 1), p51); PiecesPos[p51] = new Position(5, 1); createdPieces.Add(p51);
+
+          var p61 = new Pawn(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(6, 1), p61); PiecesPos[p61] = new Position(6, 1); createdPieces.Add(p61);
+
+          var p71 = new Pawn(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(7, 1), p71); PiecesPos[p71] = new Position(7, 1); createdPieces.Add(p71);
+
+
+          // Rank 6 (y = 2): p . . . q n . .
+          var p02 = new Pawn(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(0, 2), p02); PiecesPos[p02] = new Position(0, 2); createdPieces.Add(p02);
+
+          var p42 = new Queen(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(4, 2), p42); PiecesPos[p42] = new Position(4, 2); createdPieces.Add(p42);
+
+          var p52 = new Knight(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(5, 2), p52); PiecesPos[p52] = new Position(5, 2); createdPieces.Add(p52);
+
+
+          // Rank 5 (y = 3): empty
+
+
+          // Rank 4 (y = 4): . . N . . . . .
+          var p24 = new Knight(ChessPieceColor.White);
+          MovePieceToSquare(new Position(2, 4), p24); PiecesPos[p24] = new Position(2, 4); createdPieces.Add(p24);
+
+
+          // Rank 3 (y = 5): . . P r B . Q .
+          var p25 = new Pawn(ChessPieceColor.White);
+          MovePieceToSquare(new Position(2, 5), p25); PiecesPos[p25] = new Position(2, 5); createdPieces.Add(p25);
+
+          var p35 = new Rook(ChessPieceColor.Black);
+          MovePieceToSquare(new Position(3, 5), p35); PiecesPos[p35] = new Position(3, 5); createdPieces.Add(p35);
+
+          var p45 = new Bishop(ChessPieceColor.White);
+          MovePieceToSquare(new Position(4, 5), p45); PiecesPos[p45] = new Position(4, 5); createdPieces.Add(p45);
+
+          var p65 = new Queen(ChessPieceColor.White);
+          MovePieceToSquare(new Position(6, 5), p65); PiecesPos[p65] = new Position(6, 5); createdPieces.Add(p65);
+
+
+          // Rank 2 (y = 6): P P . . . P . P
+          var p06 = new Pawn(ChessPieceColor.White);
+          MovePieceToSquare(new Position(0, 6), p06); PiecesPos[p06] = new Position(0, 6); createdPieces.Add(p06);
+
+          var p16 = new Pawn(ChessPieceColor.White);
+          MovePieceToSquare(new Position(1, 1), p16); PiecesPos[p16] = new Position(1, 1); createdPieces.Add(p16);
+
+          var p46 = new Pawn(ChessPieceColor.White);
+          MovePieceToSquare(new Position(4, 6), p46); PiecesPos[p46] = new Position(4, 6); createdPieces.Add(p46);
+
+          var p56 = new Pawn(ChessPieceColor.White);
+          MovePieceToSquare(new Position(5, 6), p56); PiecesPos[p56] = new Position(5, 6); createdPieces.Add(p56);
+
+          var p76 = new Pawn(ChessPieceColor.White);
+          MovePieceToSquare(new Position(7, 6), p76); PiecesPos[p76] = new Position(7, 6); createdPieces.Add(p76);
+
+
+
+
+          // Rank 1 (y = 7): . . K . R . R .
+          var p27 = new King(ChessPieceColor.White);
+          MovePieceToSquare(new Position(2, 7), p27); PiecesPos[p27] = new Position(2, 7); createdPieces.Add(p27);
+
+          var p47 = new Rook(ChessPieceColor.White);
+          MovePieceToSquare(new Position(4, 7), p47); PiecesPos[p47] = new Position(4, 7); createdPieces.Add(p47);
+
+          var p67 = new Rook(ChessPieceColor.White);
+          MovePieceToSquare(new Position(6, 7), p67); PiecesPos[p67] = new Position(6, 7); createdPieces.Add(p67);
+
+          WhiteKingPos = new Position(2, 7);
+          BlackKingPos = new Position(6, 0);*/
+
         InitializeSquares();
         var createdPieces = new List<ChessPiece>();
 
-        // Rank 8 (y = 0): b . . . . r k .
-        var p00 = new Bishop(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(0, 0), p00); PiecesPos[p00] = new Position(0, 0); createdPieces.Add(p00);
+        // ----------------
+        // Black pieces
+        // ----------------
 
-        var p50 = new Rook(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(5, 0), p50); PiecesPos[p50] = new Position(5, 0); createdPieces.Add(p50);
+        // King (0,0)
+        var b00 = new King(ChessPieceColor.Black);
+        MovePieceToSquare(new Position(0, 0), b00); PiecesPos[b00] = new Position(0, 0); createdPieces.Add(b00);
 
-        var p60 = new King(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(6, 0), p60); PiecesPos[p60] = new Position(6, 0); createdPieces.Add(p60);
+        // Queen (5,0)
+        var b50 = new Queen(ChessPieceColor.Black);
+        MovePieceToSquare(new Position(5, 0), b50); PiecesPos[b50] = new Position(5, 0); createdPieces.Add(b50);
 
-
-        // Rank 7 (y = 1): . . . . b p p p
-        var p41 = new Bishop(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(4, 1), p41); PiecesPos[p41] = new Position(4, 1); createdPieces.Add(p41);
-
-        var p51 = new Pawn(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(5, 1), p51); PiecesPos[p51] = new Position(5, 1); createdPieces.Add(p51);
-
-        var p61 = new Pawn(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(6, 1), p61); PiecesPos[p61] = new Position(6, 1); createdPieces.Add(p61);
-
-        var p71 = new Pawn(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(7, 1), p71); PiecesPos[p71] = new Position(7, 1); createdPieces.Add(p71);
+        // Pawn (5,1)
+        var b51 = new Pawn(ChessPieceColor.Black);
+        MovePieceToSquare(new Position(5, 1), b51); PiecesPos[b51] = new Position(5, 1); createdPieces.Add(b51);
 
 
-        // Rank 6 (y = 2): p . . . q n . .
-        var p02 = new Pawn(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(0, 2), p02); PiecesPos[p02] = new Position(0, 2); createdPieces.Add(p02);
+        // ----------------
+        // White pieces
+        // ----------------
 
-        var p42 = new Queen(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(4, 2), p42); PiecesPos[p42] = new Position(4, 2); createdPieces.Add(p42);
-
-        var p52 = new Knight(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(5, 2), p52); PiecesPos[p52] = new Position(5, 2); createdPieces.Add(p52);
+        // King (6,4)
+        var w64 = new King(ChessPieceColor.White);
+        MovePieceToSquare(new Position(6, 4), w64); PiecesPos[w64] = new Position(6, 4); createdPieces.Add(w64);
 
 
-        // Rank 5 (y = 3): empty
+        // Pawns
+
+        // (6,3)
+        var w63 = new Pawn(ChessPieceColor.White);
+        MovePieceToSquare(new Position(6, 3), w63); PiecesPos[w63] = new Position(6, 3); createdPieces.Add(w63);
+
+        // (7,3)
+        var w73 = new Pawn(ChessPieceColor.White);
+        MovePieceToSquare(new Position(7, 3), w73); PiecesPos[w73] = new Position(7, 3); createdPieces.Add(w73);
+
+        // (5,4)
+        var w54 = new Pawn(ChessPieceColor.White);
+        MovePieceToSquare(new Position(5, 4), w54); PiecesPos[w54] = new Position(5, 4); createdPieces.Add(w54);
+
+        // (7,4)
+        var w74 = new Pawn(ChessPieceColor.White);
+        MovePieceToSquare(new Position(7, 4), w74); PiecesPos[w74] = new Position(7, 4); createdPieces.Add(w74);
+
+        // (5,5)
+        var w55 = new Pawn(ChessPieceColor.White);
+        MovePieceToSquare(new Position(5, 5), w55); PiecesPos[w55] = new Position(5, 5); createdPieces.Add(w55);
+
+        // (6,5)
+        var w65 = new Pawn(ChessPieceColor.White);
+        MovePieceToSquare(new Position(6, 5), w65); PiecesPos[w65] = new Position(6, 5); createdPieces.Add(w65);
+
+        // (7,5)
+        var w75 = new Pawn(ChessPieceColor.White);
+        MovePieceToSquare(new Position(7, 5), w75); PiecesPos[w75] = new Position(7, 5); createdPieces.Add(w75);
+
+        // (0,6)
+        var w06 = new Pawn(ChessPieceColor.White);
+        MovePieceToSquare(new Position(0, 6), w06); PiecesPos[w06] = new Position(0, 6); createdPieces.Add(w06);
 
 
-        // Rank 4 (y = 4): . . N . . . . .
-        var p24 = new Knight(ChessPieceColor.White);
-        MovePieceToSquare(new Position(2, 4), p24); PiecesPos[p24] = new Position(2, 4); createdPieces.Add(p24);
+        // ----------------
+        // King trackers
+        // ----------------
 
-
-        // Rank 3 (y = 5): . . P r B . Q .
-        var p25 = new Pawn(ChessPieceColor.White);
-        MovePieceToSquare(new Position(2, 5), p25); PiecesPos[p25] = new Position(2, 5); createdPieces.Add(p25);
-
-        var p35 = new Rook(ChessPieceColor.Black);
-        MovePieceToSquare(new Position(3, 5), p35); PiecesPos[p35] = new Position(3, 5); createdPieces.Add(p35);
-
-        var p45 = new Bishop(ChessPieceColor.White);
-        MovePieceToSquare(new Position(4, 5), p45); PiecesPos[p45] = new Position(4, 5); createdPieces.Add(p45);
-
-        var p65 = new Queen(ChessPieceColor.White);
-        MovePieceToSquare(new Position(6, 5), p65); PiecesPos[p65] = new Position(6, 5); createdPieces.Add(p65);
-
-
-        // Rank 2 (y = 6): P P . . . P . P
-        var p06 = new Pawn(ChessPieceColor.White);
-        MovePieceToSquare(new Position(0, 6), p06); PiecesPos[p06] = new Position(0, 6); createdPieces.Add(p06);
-
-        var p16 = new Pawn(ChessPieceColor.White);
-        MovePieceToSquare(new Position(1, 1), p16); PiecesPos[p16] = new Position(1, 1); createdPieces.Add(p16);
-
-        var p46 = new Pawn(ChessPieceColor.White);
-        MovePieceToSquare(new Position(4, 6), p46); PiecesPos[p46] = new Position(4, 6); createdPieces.Add(p46);
-
-        var p56 = new Pawn(ChessPieceColor.White);
-        MovePieceToSquare(new Position(5, 6), p56); PiecesPos[p56] = new Position(5, 6); createdPieces.Add(p56);
-
-        var p76 = new Pawn(ChessPieceColor.White);
-        MovePieceToSquare(new Position(7, 6), p76); PiecesPos[p76] = new Position(7, 6); createdPieces.Add(p76);
-
-
-
-
-        // Rank 1 (y = 7): . . K . R . R .
-        var p27 = new King(ChessPieceColor.White);
-        MovePieceToSquare(new Position(2, 7), p27); PiecesPos[p27] = new Position(2, 7); createdPieces.Add(p27);
-
-        var p47 = new Rook(ChessPieceColor.White);
-        MovePieceToSquare(new Position(4, 7), p47); PiecesPos[p47] = new Position(4, 7); createdPieces.Add(p47);
-
-        var p67 = new Rook(ChessPieceColor.White);
-        MovePieceToSquare(new Position(6, 7), p67); PiecesPos[p67] = new Position(6, 7); createdPieces.Add(p67);
-
-        WhiteKingPos = new Position(2, 7);
-        BlackKingPos = new Position(6, 0);
+        WhiteKingPos = new Position(6, 4);
+        BlackKingPos = new Position(0, 0);
 
         return createdPieces;
 
+
     }
 
- 
+
 
     public Square GetSquare(int x, int y)
     {

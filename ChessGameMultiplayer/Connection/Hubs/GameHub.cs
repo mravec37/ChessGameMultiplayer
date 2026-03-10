@@ -82,12 +82,16 @@
                 return;
             }
 
-            List<MoveEffectDto> dtoList = MoveConverter.ConvertEffectsToDto(result);
+            var dtoList = MoveConverter.ConvertEffectsToDto(result);
             MoveResultDto resultDto = new MoveResultDto();
             resultDto.Affected = dtoList;
             resultDto.IsValid = result.IsValid;
             resultDto.ErrorMessage = result.ErrorMessage;
             resultDto.RemainingTime = (int) result.RemainingTime.TotalMilliseconds;
+            resultDto.MoveSquares = result.MoveSquares;
+            Console.WriteLine("Move squares: ");
+            resultDto.MoveSquares.ForEach(pos => Console.WriteLine(pos.X + ":" + pos.Y));
+
             //stop timer for current player and start timer for other player and send time information with move applied
             // Broadcast to both players explicitly
             if (_connections.PlayerOne != null)
@@ -103,6 +107,31 @@
             }
         }
 
+        public async Task GetPiecePossibleMoves(Position piecePosition, String playerColor)
+        {
+            var positions = gameManager.GameContainer.GetPiecePossibleMoves(piecePosition);
+            if (playerColor.Equals("White"))
+            {
+                Console.WriteLine("Player color is white");
+                if (_connections.PlayerOne != null)
+                {
+                    await Clients.Client(_connections.PlayerOne)
+                        .SendAsync("PossibleMoves", positions);
+                }
+
+            } else if (playerColor.Equals("Black"))
+            {
+                Console.WriteLine("Player color is black");
+                if (_connections.PlayerTwo != null)
+                {
+                    await Clients.Client(_connections.PlayerTwo)
+                        .SendAsync("PossibleMoves", positions);
+                }
+            } else
+            {
+                Console.WriteLine("Unknown color");
+            }
+        }
 
         public async Task PromotionChoice(PromotionRequest promotionRequest)
         {

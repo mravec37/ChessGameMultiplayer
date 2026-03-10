@@ -10,6 +10,7 @@
         CHECK,
         CHECKMATE,
         REMOVE,
-        PROMOTED
+        PROMOTED,
+        STALEMATE
     }
 }

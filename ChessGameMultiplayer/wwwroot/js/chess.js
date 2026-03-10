@@ -4,6 +4,8 @@ let selectedSquare = null;
 let playerColor = null;
 let gameEnded = false;
 
+const moveSound = new Audio("/sounds/move.mp3");
+
 // ----------------------------
 // SIGNALR CONNECTION
 // ----------------------------
@@ -29,12 +31,16 @@ async function connectToHub() {
         if (moveResult.affected.some(e => e.type === "PROMOTION")) {
             console.log("PROMOTION");
             const effect = moveResult.affected.find(e => e.type === "PROMOTION");
-            promotion(effect);
+            clearCheckHighlights();
+            updateBoard(moveResult.affected);
+            updateMoveSquares(moveResult.moveSquares);
+            promotion(effect); 
             return;
         }
         console.log("going to update board");
         clearCheckHighlights();
         updateBoard(moveResult.affected);
+        updateMoveSquares(moveResult.moveSquares);
 
         if (moveResult.affected.some(e => e.type === "CHECKMATE")) {
             console.log("Checkmate detected in move applied");
@@ -61,6 +67,11 @@ async function connectToHub() {
     serverConnection.on("Promoted", (promotionResult) => {
         resolvePromotionResult(promotionResult);
     });
+
+    serverConnection.on("PossibleMoves", (positions) => {
+        highlightPossibleMoves(positions);
+    });
+
 
     // 🔥 SERVER → CLIENT EVENT (GAME START)
     serverConnection.on("GameStarted", (data) => {
@@ -93,6 +104,28 @@ async function connectToHub() {
 // ----------------------------
 // BOARD RENDERING
 // ----------------------------
+
+
+// Call this after every move to show last move path
+// Example: updateMoveSquares(moveResult.moveSquares);
+
+function updateMoveSquares(moveSquares) {
+    console.log("Going to update move squares");
+    document.querySelectorAll(".square.last-move-start, .square.last-move-end, .square.last-move-path")
+        .forEach(sq => sq.classList.remove("last-move-start", "last-move-end", "last-move-path"));
+
+    if (!moveSquares || moveSquares.length === 0) return;
+
+    moveSquares.forEach((pos, i) => {
+        console.log("Updating move square");
+        const square = document.querySelector(`.square[data-x='${pos.x}'][data-y='${pos.y}']`);
+        if (!square) return;
+
+        if (i === 0) square.classList.add("last-move-start");
+        else if (i === moveSquares.length - 1) square.classList.add("last-move-end");
+        else square.classList.add("last-move-path");
+    });
+}
 
 function resolvePromotionResult(promotionResult) {
     console.log("Going to resolve promotion result");
@@ -168,9 +201,14 @@ function resolveGameEnd(gameEndData) {
         const pTime = playerRemainingMs/1000;
         const oTime = opponentRemainingMs/1000;
         console.log("player remaining seconds: " + pTime + " opponent remaining seconds: " + oTime);
+        showGameOverPopup(gameEndData.winner, "time");
     } else if (gameEndData.gameEndEvent === "Checkmate") {
         console.log(gameEndData.winner + " player won on checkmate!");
         showGameOverPopup(gameEndData.winner, "checkmate");
+    } else if (gameEndData.gameEndEvent === "Stalemate") {
+        console.log("Stalemate");
+        stopClock();
+        showStalematePopup();
     }
     else {
         console.log("Unknown game end event");
@@ -186,6 +224,14 @@ function showGameOverPopup(winner, reason) {
     overlay.classList.remove("hidden");
 }
 
+function showStalematePopup(winner, reason) {
+    const overlay = document.getElementById("game-over-overlay");
+    const text = document.getElementById("game-over-text");
+
+    text.textContent = `Stalemate! It's a draw.`;
+
+    overlay.classList.remove("hidden");
+}
 
 function renderBoard(pieces) {
     // Clear board first (important for reconnects)
@@ -238,7 +284,6 @@ document.addEventListener("DOMContentLoaded", () => {
 function onSquareClick(event) {
     if (gameEnded) return;
 
-    console.log("Going to check color 1");
     const square = event.currentTarget;
     const x = parseInt(square.dataset.x);
     const y = parseInt(square.dataset.y);
@@ -249,8 +294,6 @@ function onSquareClick(event) {
     if (!selectedSquare) {
         if (!img) return;
 
-        // 🔒 Only allow selecting own pieces
-        console.log("Going to check color2");
         if (!isPlayersPiece(img.alt)) {
             console.log("⛔ Not your piece");
             return;
@@ -258,7 +301,24 @@ function onSquareClick(event) {
 
         selectedSquare = square;
         highlightSquare(square);
+
+        // Ask server for possible moves
+        serverConnection.invoke("GetPiecePossibleMoves", {
+            x: x,
+            y: y
+        }, playerColor);
+
         return;
+    }
+
+    // 🟡 NEW: CLICKED SAME SQUARE AGAIN → DESELECT
+    if (selectedSquare === square) {
+        console.log("Deselecting piece");
+
+        selectedSquare = null;
+        clearHighlights();
+        clearPossibleMoves();
+        return; // 🔥 IMPORTANT — stop here, no move sent
     }
 
     // ---- MOVING A PIECE ----
@@ -266,8 +326,10 @@ function onSquareClick(event) {
     const fromY = parseInt(selectedSquare.dataset.y);
 
     sendMove(fromX, fromY, x, y);
+
     selectedSquare = null;
     clearHighlights();
+    clearPossibleMoves();
 }
 
 function isPlayersPiece(pieceChar) {
@@ -373,28 +435,6 @@ function showPromotionChoices(x, y, pieceSymbol) {
     });
 }
 
-/*async function selectPromotion(type, x, y) {
-    document.getElementById("promotion-overlay").classList.add("hidden");
-
-    const response = await fetch("/Game/PromotionChoice", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            promotionType: type,
-            pawnPosition: { x: x, y: y }
-        })
-    });
-
-    if (!response.ok) {
-        alert("Promotion failed: " + response.status);
-        console.log(await response.text());
-        return;
-    }
-
-    const finalEffects = await response.json();
-    updateBoard(finalEffects);
-}*/
-
 async function selectPromotion(type, x, y) {
     // Hide UI immediately
     console.log("Promotion piece selected");
@@ -434,6 +474,10 @@ async function promotion(effect) {
         toSquare.appendChild(img);
         console.log("promotion 4");
     }
+
+    moveSound.currentTime = 0;
+    moveSound.play();
+
     console.log("going to show promotion choices");
     showPromotionChoices(effect.toX, effect.toY, img.alt);
 }
@@ -456,17 +500,22 @@ function updateBoard(effects) {
 
         if (effect.type === "MOVE" || effect.type === "CASTLING") {
             console.log("Move effect type");
+
             const img = fromSquare?.querySelector("img");
             if (img) {
                 fromSquare.innerHTML = "";
                 toSquare.innerHTML = "";
                 toSquare.appendChild(img);
+
+                moveSound.currentTime = 0; 
+                moveSound.play();
             }
         }
 
         else if (effect.type === "CAPTURE") {
 
             if (effect.piece) {
+
                 const filename = getPieceFilename({ piece: effect.piece });
                 const img = document.createElement("img");
                 img.src = `/images/pieces/${filename}.png`;
@@ -474,8 +523,13 @@ function updateBoard(effects) {
 
                 toSquare.innerHTML = "";
 
-                const isWhite = effect.piece === effect.piece.toLowerCase();
-                const panel = isWhite
+                // Determine color of captured piece
+                const isWhitePiece = effect.piece === effect.piece.toLowerCase();
+                const isPlayersPiece =
+                    (playerColor === "White" && isWhitePiece) ||
+                    (playerColor === "Black" && !isWhitePiece);
+
+                const panel = isPlayersPiece
                     ? document.getElementById("captured-bottom")
                     : document.getElementById("captured-top");
 
@@ -531,6 +585,33 @@ function updateBoard(effects) {
 function clearCheckHighlights() {
     document.querySelectorAll(".square.in-check")
         .forEach(sq => sq.classList.remove("in-check"));
+}
+
+function highlightPossibleMoves(positions) {
+
+    positions.forEach(pos => {
+        const square = document.querySelector(
+            `.square[data-x='${pos.x}'][data-y='${pos.y}']`
+        );
+
+        if (!square) return;
+
+        const hasPiece = square.querySelector("img") !== null;
+
+        if (hasPiece) {
+            square.classList.add("possible-capture");
+        } else {
+            square.classList.add("possible-dot");
+        }
+    });
+}
+
+function clearPossibleMoves() {
+    document.querySelectorAll(".possible-dot, .possible-capture")
+        .forEach(sq => {
+            sq.classList.remove("possible-dot");
+            sq.classList.remove("possible-capture");
+  });
 }
 
 

@@ -19,14 +19,14 @@ namespace ChessGameMultiplayer.Game.Attack
         {
         }
 
-        public void SetKingAttackingSequence(List<Square> kingAttackingSequence)
+        /*public void SetKingAttackingSequence(List<Square> kingAttackingSequence)
         {
             KingAttackingSequence = kingAttackingSequence; 
             foreach (Square square in KingAttackingSequence)
             {
                 Console.WriteLine("King attacking sequence: X: " + Board.squarePositions[square].X + " Y: " + Board.squarePositions[square].Y);
             }
-        }
+        }*/
 
         public override void UpdateAttackedSquares()
         {

@@ -1,26 +1,25 @@
-﻿.chess-container {
+﻿/* =========================
+   CHESSBOARD LAYOUT
+   ========================= */
+
+.chess-container {
     width: 600px;
     height: 600px;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
     border: 2px solid #333;
-    margin: 20px auto;
-}
-
-.row {
-    display: flex;
-    flex: 1;
+    box-sizing: border-box;
 }
 
 .square {
-    flex: 1;
-    aspect-ratio: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 36px;
+    position: relative; /* needed for overlays */
 }
 
+    /* Base square colors */
     .square.light {
         background-color: #f0d9b5;
     }
@@ -29,12 +28,20 @@
         background-color: #b58863;
     }
 
+    /* Pieces */
     .square img {
-        max-width: 90%;
-        max-height: 90%;
+        max-width: 70%;
+        max-height: 70%;
         object-fit: contain;
         pointer-events: none;
+        position: relative;
+        z-index: 4; /* ALWAYS above any overlays */
     }
+
+/* =========================
+   CAPTURED PIECES PANELS
+   ========================= */
+
 .captured-panel {
     display: flex;
     justify-content: center;
@@ -48,6 +55,9 @@
         width: 36px;
     }
 
+/* =========================
+   PROMOTION UI
+   ========================= */
 
 .promotion-overlay {
     position: absolute;
@@ -73,30 +83,92 @@
         border-radius: 4px;
     }
 
+/* helper */
 .hidden {
     display: none;
 }
+
+/* =========================
+   BOARD ROTATION (BLACK)
+   ========================= */
 
 .flipped {
     transform: rotate(180deg);
 }
 
-.flipped img {
-    transform: rotate(180deg);
-}
+    .flipped img {
+        transform: rotate(180deg);
+    }
 
-.clock {
-    font-family: 'Courier New', monospace;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-    padding: 5px 10px;
-    background-color: #f0f0f0;
-    border: 2px solid #333;
-    border-radius: 5px;
-    text-align: center;
-    width: 60px;
-}
+/* =========================
+   CHECK HIGHLIGHT
+   ========================= */
+
 .square.in-check {
     background-color: rgba(255, 0, 0, 0.6) !important;
+}
+
+/* =========================
+   LAST MOVE HIGHLIGHT (LOWER LAYER)
+   Uses ::before at z-index: 1
+   ========================= */
+
+.square.last-move::before,
+.square.last-move-start::before,
+.square.last-move-end::before,
+.square.last-move-path::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.square.last-move::before,
+.square.last-move-start::before,
+.square.last-move-end::before {
+    background: rgba(255, 255, 0, 0.35);
+}
+
+.square.last-move-path::before {
+    background: rgba(255, 255, 0, 0.20);
+}
+
+/* =========================
+   POSSIBLE MOVES HIGHLIGHT (HIGHER LAYER)
+   - Empty square = dot (z-index 3)
+   - Capture square = overlay (z-index 2)
+   ========================= */
+
+/* capture square: green overlay above last-move */
+.square.possible-capture::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background: rgba(0, 120, 0, 0.6);
+}
+
+/* empty square: green dot above both overlays */
+.square.possible-dot::after {
+    content: "";
+    width: 18px;
+    height: 18px;
+    background-color: rgba(0, 120, 0, 0.8);
+    border-radius: 50%;
+    position: absolute;
+    z-index: 3;
+}
+
+/* If a square is a possible move, disable last-move yellow overlay on that square */
+.square.possible-capture.last-move::before,
+.square.possible-capture.last-move-start::before,
+.square.possible-capture.last-move-end::before,
+.square.possible-capture.last-move-path::before,
+.square.possible-dot.last-move::before,
+.square.possible-dot.last-move-start::before,
+.square.possible-dot.last-move-end::before,
+.square.possible-dot.last-move-path::before {
+    background: transparent !important;
 }

@@ -1,5 +1,6 @@
 ﻿using ChessGameMultiplayer.Connection;
 using ChessGameMultiplayer.Dto;
+using ChessGameMultiplayer.Game.Board;
 using ChessGameMultiplayer.Game.ChessPieces;
 using ChessGameMultiplayer.Game.Moves;
 
@@ -12,7 +13,8 @@ namespace ChessGameMultiplayer.Game.Logic
         private bool promotion = false;
         public GameClock gameClock;
         public event EventHandler? CheckmateEvent;
-        private bool gameEnd = false;
+        public event EventHandler? StalemateEvent;
+        public bool gameEnd = false;
         public GameContainer()
         {
            Game = new ChessEngine();
@@ -61,6 +63,15 @@ namespace ChessGameMultiplayer.Game.Logic
                     return true;
                 }
             }
+            foreach (var moveEffect in moveResult.Affected)
+            {
+                if (moveEffect.Type == MoveEffectType.STALEMATE)
+                {
+                    Console.WriteLine("Checkmate move effect type detected");
+                    StalemateEvent?.Invoke(this, EventArgs.Empty);
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -79,6 +90,11 @@ namespace ChessGameMultiplayer.Game.Logic
             Console.WriteLine("Current turn: " + currentTurn.ToString());
             promotion = false;
             return moveResult;
+        }
+
+        internal List<Position> GetPiecePossibleMoves(Position piecePosition)
+        {
+           return Game.GetPiecePossibleMoves(piecePosition);
         }
     }
 }

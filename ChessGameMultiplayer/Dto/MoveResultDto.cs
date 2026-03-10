@@ -1,4 +1,5 @@
-﻿using ChessGameMultiplayer.Game.Moves;
+﻿using ChessGameMultiplayer.Game;
+using ChessGameMultiplayer.Game.Moves;
 
 namespace ChessGameMultiplayer.Dto
 {
@@ -8,5 +9,7 @@ namespace ChessGameMultiplayer.Dto
         public List<MoveEffectDto> Affected { get; set; } = new();
         public string ErrorMessage { get; internal set; }
         public int RemainingTime { get; set; }
+
+        public List<Position> MoveSquares { get; set; } = new();
     }
 }

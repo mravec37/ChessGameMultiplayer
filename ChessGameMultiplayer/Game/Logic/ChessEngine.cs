@@ -12,6 +12,7 @@ namespace ChessGameMultiplayer.Game.Logic
     {
         public ChessBoard Board { get; }
         public Dictionary<ChessPiece, PieceAttack> AttackedSquaresByPiece { get; private set; }
+        private List<Position> promotionMoveSquares = new List<Position>();
        
 
         public ChessEngine()
@@ -55,24 +56,24 @@ namespace ChessGameMultiplayer.Game.Logic
 
             if (IsPromotionPosition(movingPiece, to))
             {
-                return HandlePromotion(movingPiece, from, to);
+                return HandlePromotion(movingPiece, from, to, captured);
             }
-            GameStateChecker.CheckStaleMate(movingPiece.Color, Board, AttackedSquaresByPiece);
-            // stalemate
-            //
-            //
-            GameState gameState;
+
+            bool stalemate; 
+            GameState checkGameState;
             if (movingPiece is King)
             {
                 UpdatePieceAttackSliding();
-                gameState = GameState.FREE;
+                stalemate = GameStateChecker.CheckStaleMate(movingPiece.Color, Board, AttackedSquaresByPiece);
+                checkGameState = GameState.FREE;
             }
             else
             {
-                gameState = GameStateChecker.CheckForKingsCheckOrCheckmate(Board, AttackedSquaresByPiece);
+                checkGameState = GameStateChecker.CheckForKingsCheckOrCheckmate(Board, AttackedSquaresByPiece);
+                stalemate = GameStateChecker.CheckStaleMate(movingPiece.Color, Board, AttackedSquaresByPiece);
             }
 
-            var effects = CreateMoveEffects(from, to, captured, gameState);
+            var effects = CreateMoveEffects(from, to, captured, checkGameState, stalemate);
             if (enPassantCapture != null)
             {
                 Position capturedPos = new Position(to.X, from.Y);
@@ -85,11 +86,13 @@ namespace ChessGameMultiplayer.Game.Logic
             }
 
             PrintMoveEffects(effects);
-            return new MoveResult
-            {
-                IsValid = true,
-                Affected = effects
-            };
+
+            MoveResult moveResult = new MoveResult();
+            moveResult.MoveSquares = movingPiece.GetMoveSquares(to, from);
+            moveResult.IsValid = true;
+            moveResult.Affected = effects;
+
+            return moveResult;
         }
 
         public MoveResult PromotionChoice(PromotionRequest request)
@@ -175,6 +178,7 @@ namespace ChessGameMultiplayer.Game.Logic
                     to = pawn.Color == ChessPieceColor.White ? Board.BlackKingPos : Board.WhiteKingPos
                 });
             }
+            promotionResult.MoveSquares = promotionMoveSquares;
                 return promotionResult;
         }
 
@@ -203,9 +207,9 @@ namespace ChessGameMultiplayer.Game.Logic
             return null;
         }
 
-        private MoveResult HandlePromotion(ChessPiece movingPiece, Position from, Position to)
+        private MoveResult HandlePromotion(ChessPiece movingPiece, Position from, Position to, ChessPiece captured)
         {
-            return new MoveResult
+            var moveResult = new MoveResult
             {
                 IsValid = true,
                 Affected = new List<MoveEffect>
@@ -219,6 +223,18 @@ namespace ChessGameMultiplayer.Game.Logic
                     }
                 },
             };
+            if (captured != null)
+            {
+                moveResult.Affected.Add(new MoveEffect
+                {
+                    Type = MoveEffectType.CAPTURE,
+                    to = to,
+                    Piece = captured
+                });
+            }
+            promotionMoveSquares = movingPiece.GetMoveSquares(to, from);
+            moveResult.MoveSquares = promotionMoveSquares;
+            return moveResult;
         }
 
         private bool IsPromotionPosition(ChessPiece piece, Position to)
@@ -266,6 +282,7 @@ namespace ChessGameMultiplayer.Game.Logic
                             Position capturedPawnPos = new Position(to.X, from.Y);  
                             ClearCapturedPiece(enPassantPawn);
                             Board.RemovePieceFromSquare(capturedPawnPos);
+                            Board.enPassantPos.Remove(enPassantPawn);
                             return enPassantPawn;
                         }
                     }
@@ -312,7 +329,7 @@ namespace ChessGameMultiplayer.Game.Logic
             }
         }
 
-        protected virtual List<MoveEffect> CreateMoveEffects(Position from, Position to, ChessPiece? captured, GameState gameState)
+        protected virtual List<MoveEffect> CreateMoveEffects(Position from, Position to, ChessPiece? captured, GameState gameState, bool stalemate)
         {
             var effects = new List<MoveEffect>();
 
@@ -335,7 +352,8 @@ namespace ChessGameMultiplayer.Game.Logic
                 });
             }
 
-            if (gameState == GameState.CHECK)
+
+            else if (gameState == GameState.CHECK)
             {
                 effects.Add(new MoveEffect
                 {
@@ -344,13 +362,20 @@ namespace ChessGameMultiplayer.Game.Logic
                 });
             }
 
-            effects.Add(new MoveEffect
+            else if (stalemate)
             {
-                Type = MoveEffectType.MOVE,
-                to = to,
-                from = from,
-                //Piece = this
-            });
+                effects.Add(new MoveEffect
+                {
+                    Type = MoveEffectType.STALEMATE
+                });
+            }
+
+                effects.Add(new MoveEffect
+                {
+                    Type = MoveEffectType.MOVE,
+                    to = to,
+                    from = from,
+                });
             //if king is checked, add a check effect
 
             return effects;
@@ -374,6 +399,14 @@ namespace ChessGameMultiplayer.Game.Logic
                 AttackedSquaresByPiece[piece] = pieceAttack;
                 pieceAttack.UpdateAttackedSquares();
             }
+        }
+
+        internal List<Position> GetPiecePossibleMoves(Position piecePosition)
+        {
+            ChessPiece piece = Board.GetPieceAt(piecePosition);
+            var possibleMoves = piece.GetPossibleMoves(Board, piecePosition);
+            
+            return PossibleMoveFilter.filterPossibleMoves(piece, Board, AttackedSquaresByPiece, possibleMoves).Select(square => Board.squarePositions[square]).ToList();
         }
     }
 }

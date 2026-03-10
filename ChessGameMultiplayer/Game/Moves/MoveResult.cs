@@ -6,5 +6,7 @@
         public List<MoveEffect> Affected { get; set; } = new();
         public string ErrorMessage { get; internal set; }
         public TimeSpan RemainingTime { get; internal set; }
+
+        public List<Position> MoveSquares { get; internal set; }
     }
 }

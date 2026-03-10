@@ -4,36 +4,36 @@
 <link rel="stylesheet" href="~/css/chessboard.css" />
 <link rel="stylesheet" href="~/css/site.css" />
 
-<div class="chess-wrapper" style="display: flex; align-items: flex-start; gap: 10px;">
-    <!-- Clocks Column -->
-    <div class="clocks-column" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
-        <!-- Opponent clock -->
+<div class="captured-panel" id="captured-top"></div>
+
+<div class="game-layout">
+
+    <!-- Clocks -->
+    <div class="clocks">
         <div id="opponent-clock" class="clock">05:00</div>
-        <!-- Spacer -->
-        <div style="flex: 1;"></div>
-        <!-- Player clock -->
         <div id="player-clock" class="clock">05:00</div>
     </div>
+
     <!-- Chessboard -->
     <div class="chess-container" id="chessboard">
         @for (int row = 0; row < 8; row++)
         {
-            <div class="row">
-                @for (int col = 0; col < 8; col++)
-                {
-                    var isDark = (row + col) % 2 == 1;
-                    <div class="square @(isDark ? "dark" : "light")" data-x="@col" data-y="@row"></div>
-                }
-            </div>
+            @for (int col = 0; col < 8; col++)
+            {
+                var isDark = (row + col) % 2 == 1;
+                <div class="square @(isDark ? "dark" : "light")"
+                     data-x="@col" data-y="@row"></div>
+            }
         }
     </div>
+
+
 </div>
 
 <div id="promotion-overlay" class="promotion-overlay hidden">
     <div id="promotion-button-container" class="promotion-buttons"></div>
 </div>
 
-<div class="captured-panel" id="captured-top"></div>
 <div class="captured-panel" id="captured-bottom"></div>
 
 <div id="game-over-overlay" class="game-over hidden">
