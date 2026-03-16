@@ -1,11 +1,11 @@
-# Chess Multiplayer Web App (In Development)
+# Chess Multiplayer Web App 
 
 This project is a **web-based chess application**, currently under active development. 
 The project’s chess logic is built on a custom architecture I designed from scratch
 
 ## ✅ Implemented Features
 
-The following chess mechanics are already implemented and working:
+The following features are already implemented and working:
 
 ### ✔ Checkmate Detection
 
@@ -17,6 +17,12 @@ The following chess mechanics are already implemented and working:
 
 ### ✔ En Passant
 
+### ✔ 1v1 Online
+
+### ✔ Highlights legal moves of a piece
+
+### ✔ Highlights the most recent move
+
 ## 🛠 Tech Stack
 
 * **C# / ASP.NET Core** backend
@@ -26,8 +32,7 @@ The following chess mechanics are already implemented and working:
 
 ## 📌 Upcoming Features
 
-* Multiplayer mode
-* Timed matches
+* Multiplayer mode with user accounts
 * Match history
 * Player vs. AI (chess engine API integration)
 * Improved UI
@@ -38,5 +43,11 @@ The following chess mechanics are already implemented and working:
 Checkmate:
 ![App Screenshot](images/checkmate.png)
 Promotion:
+
 ![App Screenshot](images/promotion.png)
 
+Legal moves highlight:
+![App Screenshot](images/chessValid.png)
+
+Most recent move highlight:
+![App Screenshot](images/chessRecent.png)
